@@ -278,5 +278,5 @@ _d_: subtree
 
 (global-set-key (kbd "C-c #") 'hydra-outline/body) ; by example
 
-
+(provide 'nle-funcs)
 
