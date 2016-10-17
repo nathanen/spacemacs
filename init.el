@@ -52,7 +52,7 @@ values."
       spacemacs-layouts
       latex
       python
-      ;; visual-fill-column
+      visual-fill-column
       ;; pixie
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -74,7 +74,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(rainbow-mode beacon stripe-buffer doom-themes c )
+   dotspacemacs-additional-packages '(rainbow-mode beacon stripe-buffer doom-themes  )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
