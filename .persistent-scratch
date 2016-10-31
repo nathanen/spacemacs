@@ -1,0 +1,13 @@
+(["*scratch*" "find . -type f -exec grep -s -R --color \"create-course\" * \\;
+
+
+ (font-lock-add-keywords 'markdown-mode
+                             '((\"\\\\[@.*?\\\\]\" . markdown-reference-face)))
+
+
+
+ (font-lock-add-keywords 'markdown-mode
+                             '((\"%%.*\" . markdown-reference-face)))
+
+ bb
+" (1 . 1) text-mode nil])
