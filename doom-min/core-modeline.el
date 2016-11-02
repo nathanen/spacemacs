@@ -28,7 +28,8 @@
 ;; NOTE Compile this file for a faster startup!
 (eval-when-compile (require 'powerline))
 ;; FIXME Don't hardcode colors in
-(defvar mode-line-bar          (! (pl/percent-xpm mode-line-height 100 0 100 0 3 "#00B3EF" nil)))
+;; (defvar mode-line-bar          (! (pl/percent-xpm mode-line-height 100 0 100 0 3 "#00B3EF" nil)))
+(defvar mode-line-bar          (! (pl/percent-xpm mode-line-height 100 0 100 0 3 "grey50" nil)))
 (defvar mode-line-eldoc-bar    (! (pl/percent-xpm mode-line-height 100 0 100 0 3 "#B3EF00" nil)))
 (defvar mode-line-inactive-bar (! (pl/percent-xpm mode-line-height 100 0 100 0 3 nil nil)))
 
@@ -113,7 +114,7 @@ first time."
 
 ;; So the mode-line can keep track of "the current window"
 (defvar mode-line-selected-window nil)
-(defun doom|set-selected-window (&rest _)
+ (defun doom|set-selected-window (&rest _)
   (let ((window (frame-selected-window)))
     (unless (minibuffer-window-active-p window)
       (setq mode-line-selected-window window))))
@@ -124,7 +125,7 @@ first time."
 
 
 ;;
-;; Mode-line segments
+; ; Mode-line segments
 ;;
 
 (defun *buffer-path ()
