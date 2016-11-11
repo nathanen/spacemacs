@@ -325,62 +325,62 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   
   (add-to-list 'load-path "~/.spacemacs.d/custom")  
-  (add-to-list 'load-path "~/.spacemacs.d/doom-min")  
+  ;; (add-to-list 'load-path "~/.spacemacs.d/doom-min")  
 
   ;; Doom theme setup
-  (require 'f) 
-  (require 's) 
-  (require 'powerline)
-  (require 'dash)
-  (require 'evil)
-  (require 'core-defuns)
-  (require 'core)
-  (defvar doom-ediff-enabled nil)
-  ;; (load-theme 'doom-one)                ;
-  (require 'defuns-projectile)
-  (require 'core-modeline)
-  (require 'core-project)
+  ;; (require 'f) 
+  ;; (require 's) 
+  ;; (require 'powerline)
+  ;; (require 'dash)
+  ;; (require 'evil)
+  ;; (require 'core-defuns)
+  ;; (require 'core)
+  ;; (defvar doom-ediff-enabled nil)
+  ;; ;; (load-theme 'doom-one)                ;
+  ;; (require 'defuns-projectile)
+  ;; (require 'core-modeline)
+  ;; (require 'core-project)
   
-  (set-face-attribute 'mode-line-2 nil :foreground "royalblue" )  
-  ;; (set-face-attribute 'mode-line-2 nil :foreground "royalblue" :weight 'bold)  
-  (set-face-attribute 'mode-line-count-face nil :foreground "slateblue") 
-  (require 'core-ui-min)
-  (require 'core-vcs-min)
+  ;; (set-face-attribute 'mode-line-2 nil :foreground "royalblue" )  
+  ;; ;; (set-face-attribute 'mode-line-2 nil :foreground "royalblue" :weight 'bold)  
+  ;; (set-face-attribute 'mode-line-count-face nil :foreground "slateblue") 
+  ;; (require 'core-ui-min)
+  ;; (require 'core-vcs-min)
 
   ; these faces don't currently get set by the theme 
   
-  (set-face-attribute 'ivy-current-match nil :background "gglightgoldenrod")
-  (set-face-attribute 'vhl/default-face nil :background "slategray1")
+  ;; (set-face-attribute 'ivy-current-match nil :background "gglightgoldenrod")
+  ;; (set-face-attribute 'vhl/default-face nil :background "slategray1")
   
-  (setq evil-normal-state-cursor '("orange" box))
-  (setq evil-insert-state-cursor '("green" box))
-  (defun mode-line-set-evil-state ()
-    (set-face-foreground 'mode-line-2
-                         (cond ((evil-motion-state-p) "#21242B")
-                               ((evil-visual-state-p) "#5fd7ff")
-                               ((evil-emacs-state-p) "#be84ff")
-                               ((evil-normal-state-p) "#fd971f")
-                               (t "#a6e22e")))
-                               )
+  ;; (setq evil-normal-state-cursor '("orange" box))
+  ;; (setq evil-insert-state-cursor '("green" box))
+  ;; (defun mode-line-set-evil-state ()
+  ;;   (set-face-foreground 'mode-line-2
+  ;;                        (cond ((evil-motion-state-p) "#21242B")
+  ;;                              ((evil-visual-state-p) "#5fd7ff")
+  ;;                              ((evil-emacs-state-p) "#be84ff")
+  ;;                              ((evil-normal-state-p) "#fd971f")
+  ;;                              (t "#a6e22e")))
+  ;;                              )
 
 
 
-  (add-hook 'post-command-hook 'mode-line-set-evil-state)
+  ;; (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
-  (blink-cursor-mode 1)
-  ;; (setq-default fringes-outside-margins t)
-  (set-face-attribute 'mode-line nil :box nil)
+  ;; (blink-cursor-mode 1)
+  ;; ;; (setq-default fringes-outside-margins t)
+  ;; (set-face-attribute 'mode-line nil :box nil)
 
-  ;; Refine git gutter fringe markers 
-  (define-fringe-bitmap 'git-gutter-fr:added
-    [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
-    nil nil 'center)
-  (define-fringe-bitmap 'git-gutter-fr:modified
-    [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
-    nil nil 'center)
-  (define-fringe-bitmap 'git-gutter-fr:deleted
-    [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
-    nil nil 'center)
+  ;; ;; Refine git gutter fringe markers 
+  ;; (define-fringe-bitmap 'git-gutter-fr:added
+  ;;   [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+  ;;   nil nil 'center)
+  ;; (define-fringe-bitmap 'git-gutter-fr:modified
+  ;;   [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+  ;;   nil nil 'center)
+  ;; (define-fringe-bitmap 'git-gutter-fr:deleted
+  ;;   [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
+  ;;   nil nil 'center)
   (set-fringe-mode '(30 . 30))
   (global-vi-tilde-fringe-mode -1)
 
@@ -399,10 +399,10 @@ you should place your code here."
   (setq text-scale-mode-step 1.1)
 
 
-  (setq visual-fill-column-fringes-outside-margins t) 
-  (persistent-scratch-setup-default)    ;
-  (setq  persistent-scratch-backup-directory  "~/.emacs.d/private") 
-  (setq persistent-scratch-save-file "~/.emacs.d/private/.persistent-scratch")
+  ;; (setq visual-fill-column-fringes-outside-margins t) 
+  ;; (persistent-scratch-setup-default)    ;
+  ;; (setq  persistent-scratch-backup-directory  "~/.emacs.d/private") 
+  ;; (setq persistent-scratch-save-file "~/.emacs.d/private/.persistent-scratch")
 
   ;; Make evil-mode up/down operate in screen lines instead of logical lines
   (define-key evil-motion-state-map "j" 'evil-next-visual-line)
@@ -451,31 +451,31 @@ you should place your code here."
 ;; markdown mode customizations
 (setq markdown-footnote-location 'immediately)
 
-(make-face 'markdown-reference-face)
-(make-face 'markdown-latex-face)
-(make-face 'org-reference-face)
+;; (make-face 'markdown-reference-face)
+;; (make-face 'markdown-latex-face)
+;; (make-face 'org-reference-face)
 
 
-(set-face-attribute 'markdown-reference-face nil
-                    :weight 'bold
-                    :height 1.0
-                    :foreground "darkolivegreen4")
+;; (set-face-attribute 'markdown-reference-face nil
+;;                     :weight 'bold
+;;                     :height 1.0
+;;                     :foreground "darkolivegreen4")
  
-(set-face-attribute 'markdown-latex-face nil
-                    :weight 'bold
-                    :height 0.9
-                    :foreground "grey30")
+;; (set-face-attribute 'markdown-latex-face nil
+;;                     :weight 'bold
+;;                     :height 0.9
+;;                     :foreground "grey30")
 
-(set-face-attribute 'org-reference-face nil
-                    :inherit 'markdown-reference-face
-                    :foreground "green"
-                    )
+;; (set-face-attribute 'org-reference-face nil
+;;                     :inherit 'markdown-reference-face
+;;                     :foreground "green"
+;;                     )
   
-(font-lock-add-keywords 'markdown-mode
-                        '(("\\[@.*?\\]" . markdown-reference-face)))
+;; (font-lock-add-keywords 'markdown-mode
+;;                         '(("\\[@.*?\\]" . markdown-reference-face)))
 
-(font-lock-add-keywords 'markdown-mode
-                        '(("%%.*" . markdown-reference-face)))
+;; (font-lock-add-keywords 'markdown-mode
+;;                         '(("%%.*" . markdown-reference-face)))
 
 
 (setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
@@ -511,7 +511,7 @@ you should place your code here."
 ;; (setq ivy-re-builders-alist 
 ;;       '((t . ivy--regex-fuzzy)))
 
-(setq gc-cons-threshold 50000000)
+;; (setq gc-cons-threshold 50000000)
 
 
 ;; (require 'atomic-chrome)
