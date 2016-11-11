@@ -52,7 +52,7 @@ values."
       imenu-list  
       org
       spacemacs-layouts
-    latex (:variables latex-enable-folding t)
+    (latex :variables latex-enable-folding t)
       python
       visual-fill-column
       ;; doom
@@ -60,8 +60,9 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-      (spell-checking :variables =enable-flyspell-auto-completion= t)
-      syntax-checking
+      ;; (spell-checking :variables =enable-flyspell-auto-completion= t)
+      ;; syntax-checking
+      (spell-checking)
      ( version-control :variables version-control-global-margin t version-control-diff-tool 'git-gutter)
 
       (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
