@@ -1,0 +1,10 @@
+*  expand region  (SPC-v)
+
+opens up transient state: v = expands, V=contracts, r=reset, e=edit (what does this mean?)
+
+* switch to previous buffer (SPC-tab)
+
+ very useful for rapidly cycling between two windows (for example, .spacemacs and scratch, for when I want to try out lisp code)
+
+ 
+

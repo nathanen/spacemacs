@@ -40,13 +40,14 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ivy
-     auto-completion
+     (auto-completion :disabled-for org git markdown text)
      better-defaults
      emacs-lisp
      bibtex
      osx
      themes-megapack
-     (git :variables git-gutter-use-fringe t)
+     ;; (git :variables git-gutter-use-fringe t)
+     git
       markdown
       imenu-list  
       org
@@ -59,7 +60,7 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-      spell-checking
+      (spell-checking :variables =enable-flyspell-auto-completion= t)
       syntax-checking
      ( version-control :variables version-control-global-margin t version-control-diff-tool 'git-gutter)
 
@@ -147,8 +148,8 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '( 
-                         spacemacs-dark
                          spacemacs-light
+                         spacemacs-dark
                          twilight
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
@@ -345,6 +346,12 @@ you should place your code here."
   (set-face-attribute 'mode-line-count-face nil :foreground "slateblue") 
   (require 'core-ui-min)
   (require 'core-vcs-min)
+
+  ; these faces don't currently get set by the theme 
+  
+  (set-face-attribute 'ivy-current-match nil :background "gglightgoldenrod")
+  (set-face-attribute 'vhl/default-face nil :background "slategray1")
+  
   (setq evil-normal-state-cursor '("orange" box))
   (setq evil-insert-state-cursor '("green" box))
   (defun mode-line-set-evil-state ()
@@ -361,10 +368,10 @@ you should place your code here."
   (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
   (blink-cursor-mode 1)
-  (setq-default fringes-outside-margins t)
+  ;; (setq-default fringes-outside-margins t)
   (set-face-attribute 'mode-line nil :box nil)
 
-  ;; Refine git gutter fring markers 
+  ;; Refine git gutter fringe markers 
   (define-fringe-bitmap 'git-gutter-fr:added
     [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
     nil nil 'center)
@@ -432,7 +439,9 @@ you should place your code here."
 (require  'nle-funcs)
 (require 'nle-tomorrow-day-theme)
 
-
+(spacemacs|disable-company org-mode)
+(spacemacs|disable-company markdown-mode)
+(spacemacs|disable-company text-mode)
 (define-key global-map "\M-Q" 'unfill-paragraph)
 (eval-after-load "flyspell" '(progn
                                (define-key flyspell-mouse-map (kbd "<s-mouse-1>") #'flyspell-correct-word)
@@ -449,12 +458,12 @@ you should place your code here."
 
 (set-face-attribute 'markdown-reference-face nil
                     :weight 'bold
-                    :height 0.8
-                    :foreground "darkorange")
-
+                    :height 1.0
+                    :foreground "darkolivegreen4")
+ 
 (set-face-attribute 'markdown-latex-face nil
                     :weight 'bold
-                    :height 0.8
+                    :height 0.9
                     :foreground "grey30")
 
 (set-face-attribute 'org-reference-face nil
@@ -468,15 +477,48 @@ you should place your code here."
 (font-lock-add-keywords 'markdown-mode
                         '(("%%.*" . markdown-reference-face)))
 
+
+(setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
+
+
+(defvar reftex-cite-format-markdown
+
+  '(?\C-m . "[@%l]")
+  "Reftex citation format compatible with pandoc markdown.") 
+
+(defun my-markdown-mode-hook()
+  (define-key markdown-mode-map "\C-c["
+    (lambda ()
+      (interactive)
+      (let ((reftex-cite-format "[@%l]" ))
+        (reftex-citation)))))
+
+
+(add-hook 'markdown-mode-hook 'my-markdown-mode-hook) 
+
 ;; (set-face-attribute 'variable-pitch nil :family "Ubuntu Mono" :inherit 'default) ;
 
   (set-face-attribute 'variable-pitch nil :family "Museo Sans" :inherit 'default :height 130)
   ;; (add-hook 'markdown-mode-hook (lambda () (variable-pitch-mode nil)))
   ;; (add-hook 'org-mode-hook (lambda () (variable-pitch-mode nil)))
   ;; (set-face-attribute 'default nil :foreground "grey")
-;; misc-config  
-(require 'atomic-chrome)
-(atomic-chrome-start-server)
+;; misc-config
+
+(set-face-attribute 'default nil :family "ubuntu mono" :foreground "grey10" :height 140)
+(set-face-attribute 'variable-pitch nil :family "Roboto Mono" :height 140 :weight 'normal)
+ 
+;; trying fuzzy matching with counsel/ivy
+;; (setq ivy-re-builders-alist 
+;;       '((t . ivy--regex-fuzzy)))
+
+(setq gc-cons-threshold 50000000)
+
+
+;; (require 'atomic-chrome)
+;; (atomic-chrome-start-server)
+
+;; ZEBRA: quickly search to get here 
+
 )
 
 
@@ -494,14 +536,14 @@ you should place your code here."
    (vector "#212121" "#B71C1C" "#558b2f" "#FFA000" "#2196f3" "#4527A0" "#00796b" "#FAFAFA"))
  '(custom-safe-themes
    (quote
-    ("398f0209bfd642cf7a5e3e03bdc20db2822fd6746225a4bd99ccf9b26d3059d0" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" default)))
+    ("bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "398f0209bfd642cf7a5e3e03bdc20db2822fd6746225a4bd99ccf9b26d3059d0" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" default)))
  '(evil-visual-mark-mode t)
  '(evil-want-Y-yank-to-eol nil)
- '(fci-rule-color "#ECEFF1" t)
+ '(fci-rule-color "#ECEFF1")
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
-    (atomic-chrome websocket csv-mode persistent-scratch hide-comnt web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode company-web web-completion-data doom-one-theme-theme doom-one-theme stripe-buffer beacon rainbow-mode flycheck-pos-tip pos-tip flycheck doom-themes imenu-list doom-themes all-the-icons font-lock+ org-ref key-chord helm-bibtex parsebib biblio biblio-core typo evil-snipe visual-fill-column pixie-mode inf-clojure clojure-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme reveal-in-osx-finder railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pbcopy pastels-on-dark-theme osx-trash osx-dictionary orgit organic-green-theme org-projectile org-present org org-pomodoro alert log4e gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mwim mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow lush-theme live-py-mode light-soap-theme launchctl jbeans-theme jazz-theme ir-black-theme inkpot-theme hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md gandalf-theme flyspell-correct-ivy flyspell-correct flatui-theme flatland-theme firebelly-theme farmhouse-theme evil-magit magit magit-popup git-commit with-editor espresso-theme dracula-theme django-theme diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-statistics company-auctex company-anaconda company colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
+    (pcache atomic-chrome websocket csv-mode persistent-scratch hide-comnt web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode company-web web-completion-data doom-one-theme-theme doom-one-theme stripe-buffer beacon rainbow-mode flycheck-pos-tip pos-tip flycheck doom-themes imenu-list doom-themes all-the-icons font-lock+ org-ref key-chord helm-bibtex parsebib biblio biblio-core typo evil-snipe visual-fill-column pixie-mode inf-clojure clojure-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme reveal-in-osx-finder railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pbcopy pastels-on-dark-theme osx-trash osx-dictionary orgit organic-green-theme org-projectile org-present org org-pomodoro alert log4e gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mwim mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow lush-theme live-py-mode light-soap-theme launchctl jbeans-theme jazz-theme ir-black-theme inkpot-theme hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md gandalf-theme flyspell-correct-ivy flyspell-correct flatui-theme flatland-theme firebelly-theme farmhouse-theme evil-magit magit magit-popup git-commit with-editor espresso-theme dracula-theme django-theme diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-statistics company-auctex company-anaconda company colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
    (quote

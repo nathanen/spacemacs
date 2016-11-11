@@ -75,6 +75,10 @@ delay 2
 (interactive)
 (nle-space 3)
 )
+(defun nle-4 ()
+  (interactive)
+  (nle-space 4)
+  )
 
 (defun nle-light ()
 (interactive)
@@ -280,3 +284,20 @@ _d_: subtree
 
 (provide 'nle-funcs)
 
+(defun buffer-same-mode (change-buffer-fun)
+  (let ((current-mode major-mode)
+        (next-mode nil))
+    (while (not (eq next-mode current-mode))
+      (funcall change-buffer-fun)
+      (setq next-mode major-mode))))
+
+(defun previous-buffer-same-mode ()
+  (interactive)
+  (buffer-same-mode #'previous-buffer))
+
+(defun next-buffer-same-mode ()
+  (interactive)
+  (buffer-same-mode #'next-buffer))
+
+(global-set-key (kbd "s-`") 'next-buffer-same-mode)
+(global-set-key (kbd "s-t") 'next-buffer-same-mode)
