@@ -161,7 +161,7 @@ values."
                                :size 12
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.0)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -192,7 +192,7 @@ values."
    dotspacemacs-retain-visual-state-on-shift t
    ;; If non-nil, J and K move lines up and down when in visual mode.
    ;; (default nil)
-   dotspacemacs-visual-line-move-text nil
+   dotspacemacs-visual-line-move-text t
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
@@ -266,11 +266,11 @@ values."
    ;; If non nil show the color guide hint for transient state keys. (default t)
    dotspacemacs-show-transient-state-color-guide t
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling t
+   dotspacemacs-smooth-scrolling t  
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
@@ -401,9 +401,9 @@ you should place your code here."
 
 
   ;; (setq visual-fill-column-fringes-outside-margins t) 
-  ;; (persistent-scratch-setup-default)    ;
-  ;; (setq  persistent-scratch-backup-directory  "~/.emacs.d/private") 
-  ;; (setq persistent-scratch-save-file "~/.emacs.d/private/.persistent-scratch")
+  (persistent-scratch-setup-default)    ;
+  (setq  persistent-scratch-backup-directory  "~/.emacs.d/private") 
+  (setq persistent-scratch-save-file "~/.emacs.d/private/.persistent-scratch")
 
   ;; Make evil-mode up/down operate in screen lines instead of logical lines
   (define-key evil-motion-state-map "j" 'evil-next-visual-line)
@@ -418,6 +418,7 @@ you should place your code here."
 
   (define-key evil-normal-state-map (kbd "gw") 'avy-goto-word-1)
   (define-key evil-normal-state-map (kbd "gs") 'avy-goto-char-2)
+  (define-key evil-normal-state-map (kbd "gt") 'avy-goto-char-2)
 
 ;; Evil mode tweaks to accomodate visual lines, emacs undo
   (setq evil-move-cursor-back nil)
@@ -452,31 +453,31 @@ you should place your code here."
 ;; markdown mode customizations
 (setq markdown-footnote-location 'immediately)
 
-;; (make-face 'markdown-reference-face)
-;; (make-face 'markdown-latex-face)
-;; (make-face 'org-reference-face)
+(make-face 'markdown-reference-face)
+(make-face 'markdown-latex-face)
+(make-face 'org-reference-face)
 
 
-;; (set-face-attribute 'markdown-reference-face nil
-;;                     :weight 'bold
-;;                     :height 1.0
-;;                     :foreground "darkolivegreen4")
+(set-face-attribute 'markdown-reference-face nil
+                    :weight 'bold
+                    :height 1.0
+                    :foreground "darkolivegreen4")
  
-;; (set-face-attribute 'markdown-latex-face nil
-;;                     :weight 'bold
-;;                     :height 0.9
-;;                     :foreground "grey30")
+(set-face-attribute 'markdown-latex-face nil
+                    :weight 'bold
+                    :height 0.9
+                    :foreground "grey30")
 
-;; (set-face-attribute 'org-reference-face nil
-;;                     :inherit 'markdown-reference-face
-;;                     :foreground "green"
-;;                     )
+(set-face-attribute 'org-reference-face nil
+                    :inherit 'markdown-reference-face
+                    :foreground "green"
+                    )
   
-;; (font-lock-add-keywords 'markdown-mode
-;;                         '(("\\[@.*?\\]" . markdown-reference-face)))
+(font-lock-add-keywords 'markdown-mode
+                        '(("\\[@.*?\\]" . markdown-reference-face)))
 
-;; (font-lock-add-keywords 'markdown-mode
-;;                         '(("%%.*" . markdown-reference-face)))
+(font-lock-add-keywords 'markdown-mode
+                        '(("%%.*" . markdown-reference-face)))
 
 
 (setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
@@ -506,8 +507,10 @@ you should place your code here."
 ;; misc-config
 
 (set-face-attribute 'default nil :family "ubuntu mono" :foreground "grey10" :height 140)
-(set-face-attribute 'variable-pitch nil :family "Roboto Mono" :height 140 :weight 'normal)
- 
+;; (set-face-attribute 'variable-pitch nil :family "Roboto Mono" :height 140 :weight 'normal)
+(set-face-attribute 'variable-pitch nil :family "hack" :height 140)
+;; (set-face-attribute 'variable-pitch nil :family "consolas" :height 150)
+;; (set-face-attribute 'variable-pitch nil :family "espresso mono" :height 140)
 ;; trying fuzzy matching with counsel/ivy
 ;; (setq ivy-re-builders-alist 
 ;;       '((t . ivy--regex-fuzzy)))
@@ -517,7 +520,7 @@ you should place your code here."
 
 ;; (require 'atomic-chrome)
 ;; (atomic-chrome-start-server)
-
+(setq create-lockfiles nil)
 ;; ZEBRA: quickly search to get here 
 
 )
@@ -531,16 +534,12 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(ansi-color-names-vector
-   (vector "#212121" "#B71C1C" "#558b2f" "#FFA000" "#2196f3" "#4527A0" "#00796b" "#FAFAFA"))
  '(custom-safe-themes
    (quote
     ("bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "398f0209bfd642cf7a5e3e03bdc20db2822fd6746225a4bd99ccf9b26d3059d0" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" default)))
  '(evil-visual-mark-mode t)
  '(evil-want-Y-yank-to-eol nil)
- '(fci-rule-color "#ECEFF1")
+ '(fci-rule-color "#ECEFF1" t)
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
