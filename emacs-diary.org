@@ -11,6 +11,6 @@ opens up transient state: v = expands, V=contracts, r=reset, e=edit (what does 
 Was having trouble with emacs hanging while initiating swiper searches. I could escape only by issuing a “kill -sigusr2 xxxx” command.
 
 Possible suspects: smooth scrolling, emacs-mac-port, visual-fill-column, visual-wrap, unicode fonts in modeline, powerline scale factor 
- 
+
 FIXED: seems to have been the unicode fonts
    dotspacemacs-mode-line-unicode-symbols nil
