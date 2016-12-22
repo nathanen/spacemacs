@@ -573,7 +573,8 @@ you should place your code here."
 (if (file-exists-p abbrev-file-name)
     (quietly-read-abbrev-file))
 
-
+;; relocate bookmark file to git-controlled .spacemacs.d
+(setq bookmark-default-file "~/.spacemacs.d/bookmarks")
 
 ;; ZEBRA: quickly search to get here
 
