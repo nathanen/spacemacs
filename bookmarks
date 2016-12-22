@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("md2out.py"
+ (filename . "~/bin/markdown2latex/md2out.py")
+ (front-context-string . "\n    if os.path.")
+ (rear-context-string . "rmtree(WORKPATH)")
+ (position . 3929))
+)
