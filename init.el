@@ -416,7 +416,6 @@
 
     )
 
-
   (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
   (blink-cursor-mode 1)
