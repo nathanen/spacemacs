@@ -124,7 +124,7 @@
 ;;    ;; with `:variables' keyword (similar to layers). Check the editing styles
 ;;    ;; section of the documentation for details on available variables.
 ;;    ;; (default 'vim)
-;;    dotspacemacs-editing-style 'hybrid
+;;    dotspacemacs-editing-style 'vim
 ;;    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
 ;;    dotspacemacs-verbose-loading nil
 ;;    ;; Specify the startup banner. Default value is `official', it displays
@@ -656,18 +656,18 @@
 (setq bookmark-default-file "~/.spacemacs.d/bookmarks")
 
 ;; disable arrow keys to get practice
-(global-unset-key (kbd "<left>"))
-(global-unset-key (kbd "<right>"))
-(global-unset-key (kbd "<up>"))
-(global-unset-key (kbd "<down>"))
-(global-unset-key (kbd "<C-left>"))
-(global-unset-key (kbd "<C-right>"))
-(global-unset-key (kbd "<C-up>"))
-(global-unset-key (kbd "<C-down>"))
-(global-unset-key (kbd "<M-left>"))
-(global-unset-key (kbd "<M-right>"))
-(global-unset-key (kbd "<M-up>"))
-(global-unset-key (kbd "<M-down>"))
+;; (global-unset-key (kbd "<left>"))
+;; (global-unset-key (kbd "<right>"))
+;; (global-unset-key (kbd "<up>"))
+;; (global-unset-key (kbd "<down>"))
+;; (global-unset-key (kbd "<C-left>"))
+;; (global-unset-key (kbd "<C-right>"))
+;; (global-unset-key (kbd "<C-up>"))
+;; (global-unset-key (kbd "<C-down>"))
+;; (global-unset-key (kbd "<M-left>"))
+;; (global-unset-key (kbd "<M-right>"))
+;; (global-unset-key (kbd "<M-up>"))
+;; (global-unset-key (kbd "<M-down>"))
 
 ;; reset echo area after swiper search
 (setq resize-mini-windows t)
