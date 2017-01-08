@@ -124,7 +124,7 @@ values."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'hybrid
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -320,52 +320,100 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun dotspacemacs/user-config ()
-  "Configuration function for user code.
+"Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+
   
   (add-to-list 'load-path "~/.spacemacs.d/custom")  
   (add-to-list 'load-path "~/.spacemacs.d/doom-min")  
 
   ;; Doom theme setup
-  (require 'f) 
-  (require 's) 
-  (require 'powerline)
-  (require 'dash)
-  (require 'evil)
-  (require 'core-defuns)
-  (require 'core)
-  (defvar doom-ediff-enabled nil)
+  ;; (require 'f) 
+  ;; (require 's) 
+  ;; (require 'powerline)
+  ;; (require 'dash)
+  ;; (require 'evil)
+  ;; (require 'core-defuns)
+  ;; (require 'core)
+  ;; (defvar doom-ediff-enabled nil)
   ;; (load-theme 'doom-one)                ;
-  (require 'defuns-projectile)
-  (require 'core-modeline)
-  (require 'core-project)
+  ;; (require 'defuns-projectile)
+  ;; (require 'core-modeline)
+  ;; (require 'core-project)
   
-  (set-face-attribute 'mode-line-2 nil :foreground "royalblue" )  
+  ;; (set-face-attribute 'mode-line-2 nil :foreground "royalblue" )  
   ;; (set-face-attribute 'mode-line-2 nil :foreground "royalblue" :weight 'bold)  
-  (set-face-attribute 'mode-line-count-face nil :foreground "slateblue") 
-  (require 'core-ui-min)
-  (require 'core-vcs-min)
+  ;; (set-face-attribute 'mode-line-count-face nil :foreground "slateblue") 
+  ;; (require 'core-ui-min)
+  ;; (require 'core-vcs-min)
 
   ; these faces don't currently get set by the theme 
   
   (set-face-attribute 'ivy-current-match nil :background "lightgoldenrod")
   (set-face-attribute 'vhl/default-face nil :background "slategray1")
-  
-  (setq evil-normal-state-cursor '("orange" box))
-  (setq evil-insert-state-cursor '("green" box))
-  (defun mode-line-set-evil-state ()
-    (set-face-foreground 'mode-line-2
-                         (cond ((evil-motion-state-p) "#21242B")
-                               ((evil-visual-state-p) "#5fd7ff")
-                               ((evil-emacs-state-p) "#be84ff")
-                               ((evil-normal-state-p) "#fd971f")
-                               (t "#a6e22e")))
-                               )
 
+  (setq-default header-line-format 
+                '(" "))
+  (set-face-attribute 'header-line nil :background "black" :height 0.3)
+
+  (setq powerline-height 24)
+  (set-face-foreground 'mode-line "gray20")
+  (set-face-foreground 'powerline-active1 "grey20")
+  (set-face-foreground 'powerline-active2 "grey20")
+  (set-face-foreground 'mode-line-buffer-id "grey20")
+  (setq evil-normal-state-cursor '("orange" box))
+  (setq evil-hybrid-state-cursor '("green" box))
+  (setq evil-insert-state-cursor '("green" box))
+
+  (defvar evil_insert "chartreuse3")
+  (defvar evil_visual "gray")
+  (defvar evil_motion "plum")
+  (defvar evil_emacs "SkyBlue2")
+  (defvar evil_normal "DarkGoldenrod2")
+
+  (defun mode-line-set-evil-state ()
+    ;; (set-face-background 'tabbar-default
+    ;;                      (cond ((evil-motion-state-p) evil_motion)
+    ;;                            ((evil-visual-state-p) "gray")
+    ;;                            ((evil-emacs-state-p) evil_emacs)
+    ;;                            ((evil-normal-state-p) "DarkGoldenrod2")
+    ;;                            ((evil-motion-state-p) "plum")
+    ;;                            (t "chartreuse3")))
+    (set-face-background 'mode-line
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+    
+    (set-face-background 'powerline-active1
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+
+    (set-face-background 'powerline-active2
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+
+    (set-face-background 'header-line
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+   
+
+    )
 
 
   (add-hook 'post-command-hook 'mode-line-set-evil-state)
@@ -373,6 +421,14 @@ you should place your code here."
   (blink-cursor-mode 1)
   ;; (setq-default fringes-outside-margins t)
   (set-face-attribute 'mode-line nil :box nil)
+
+  ;; git customizations
+  (global-auto-revert-mode 1)
+  (setq auto-revert-check-vc-info t)
+  (setq auto-revert-interval 2)
+
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil)
 
   ;; Refine git gutter fringe markers 
   (define-fringe-bitmap 'git-gutter-fr:added
@@ -384,8 +440,15 @@ you should place your code here."
   (define-fringe-bitmap 'git-gutter-fr:deleted
     [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
     nil nil 'center)
-  (set-fringe-mode '(30 . 30))
+  ;; (set-fringe-mode '(30 . 30))
   (global-vi-tilde-fringe-mode -1)
+
+  ;; (setq-default
+  ;;  linum-format "%4d  "
+  ;;  linum-relative-format "%4s   "  )
+
+  ;; (set-face-attribute 'linum nil :background "#F4F0EB")  ;;put this in theme
+
 
 
   (global-visual-line-mode 1)
@@ -410,13 +473,14 @@ you should place your code here."
   (setq-default line-spacing 3)
   (setq text-scale-mode-step 1.1)
 
-
   ;; (setq visual-fill-column-fringes-outside-margins t) 
   ;; (persistent-scratch-setup-default)    ;
   (setq  persistent-scratch-backup-directory  "~/.emacs.d/private/local/") 
   (setq persistent-scratch-save-file "~/.emacs.d/private/local/.persistent-scratch")
+  (persistent-scratch-restore)
+  (persistent-scratch-autosave-mode)
 
-  ;; Make evil-mode up/down operate in screen lines instead of logical lines
+;; Make evil-mode up/down operate in screen lines instead of logical lines
   (define-key evil-motion-state-map "j" 'evil-next-visual-line)
   (define-key evil-motion-state-map "k" 'evil-previous-visual-line)
   ;; Also in visual mode
@@ -444,7 +508,7 @@ you should place your code here."
   (setq evil-symbol-word-search t)
   (setq evil-want-fine-undo t)
   
-  (setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-key-sequence "kk")
   (setq-default evil-escape-delay 0.2)
 
   (with-eval-after-load 'dired
@@ -524,6 +588,19 @@ you should place your code here."
                                                )
   ))
 
+
+
+;; LATEX settings
+;; this should disable ref labels
+(setq LaTeX-section-hook
+      '(LaTeX-section-heading
+        LaTeX-section-title
+        LaTeX-section-section))
+
+(add-hook 'LaTeX-mode-hook (lambda ()
+                             (TeX-fold-mode 1)))
+
+
 (setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
 
 
@@ -537,22 +614,23 @@ you should place your code here."
     (lambda ()
       (interactive)
       (let ((reftex-cite-format "[@%l]" ))
-        (reftex-citation)))))
+        (reftex-citation))))) 
 
 
 (add-hook 'markdown-mode-hook 'my-markdown-mode-hook) 
 
 ;; (set-face-attribute 'variable-pitch nil :family "Ubuntu Mono" :inherit 'default) ;
 
-  (set-face-attribute 'variable-pitch nil :family "Museo Sans" :inherit 'default :height 130)
-  ;; (add-hook 'markdown-mode-hook (lambda () (variable-pitch-mode nil)))
-  ;; (add-hook 'org-mode-hook (lambda () (variable-pitch-mode nil)))
+  (set-face-attribute 'variable-pitch nil :family "Museo Sans" :inherit 'default :height 150)
+  (add-hook 'markdown-mode-hook (lambda () (variable-pitch-mode t)))
+  (add-hook 'org-mode-hook (lambda () (variable-pitch-mode t)))
+(add-hook 'text-mode-hook (lambda () (variable-pitch-mode t)))
   ;; (set-face-attribute 'default nil :foreground "grey")
 ;; misc-config
 
-(set-face-attribute 'default nil :family "ubuntu mono" :foreground "grey10" :height 140)
+;; (set-face-attribute 'default nil :family "ubuntu mono" :foreground "grey10" :height 140)
 ;; (set-face-attribute 'variable-pitch nil :family "Roboto Mono" :height 140 :weight 'normal)
-(set-face-attribute 'variable-pitch nil :family "hack" :height 140)
+;; (set-face-attribute 'variable-pitch nil :family "hack" :height 160)
 ;; (set-face-attribute 'variable-pitch nil :family "consolas" :height 150)
 ;; (set-face-attribute 'variable-pitch nil :family "espresso mono" :height 140)
 ;; trying fuzzy matching with counsel/ivy
@@ -590,10 +668,12 @@ you should place your code here."
 (global-unset-key (kbd "<M-up>"))
 (global-unset-key (kbd "<M-down>"))
 
+;; reset echo area after swiper search
+(setq resize-mini-windows t)
+
 ;; ZEBRA: quickly search to get here
 
 )
-
 
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -606,11 +686,11 @@ you should place your code here."
  '(custom-safe-themes
    (quote
     ("bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "398f0209bfd642cf7a5e3e03bdc20db2822fd6746225a4bd99ccf9b26d3059d0" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" default)))
- '(fci-rule-color "#ECEFF1" t)
+ '(fci-rule-color "#ECEFF1")
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
-    (relative-line-numbers nlinum-relative autothemer seq xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode pcache atomic-chrome websocket csv-mode persistent-scratch hide-comnt web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode company-web web-completion-data doom-one-theme-theme doom-one-theme stripe-buffer beacon rainbow-mode flycheck-pos-tip pos-tip flycheck doom-themes imenu-list doom-themes all-the-icons font-lock+ org-ref key-chord helm-bibtex parsebib biblio biblio-core typo evil-snipe visual-fill-column pixie-mode inf-clojure clojure-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme reveal-in-osx-finder railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pbcopy pastels-on-dark-theme osx-trash osx-dictionary orgit organic-green-theme org-projectile org-present org org-pomodoro alert log4e gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mwim mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow lush-theme live-py-mode light-soap-theme launchctl jbeans-theme jazz-theme ir-black-theme inkpot-theme hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md gandalf-theme flyspell-correct-ivy flyspell-correct flatui-theme flatland-theme firebelly-theme farmhouse-theme evil-magit magit magit-popup git-commit with-editor espresso-theme dracula-theme django-theme diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-statistics company-auctex company-anaconda company colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
+    (tabbar relative-line-numbers nlinum-relative autothemer seq xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode pcache atomic-chrome websocket csv-mode persistent-scratch hide-comnt web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode company-web web-completion-data doom-one-theme-theme doom-one-theme stripe-buffer beacon rainbow-mode flycheck-pos-tip pos-tip flycheck doom-themes imenu-list doom-themes all-the-icons font-lock+ org-ref key-chord helm-bibtex parsebib biblio biblio-core typo evil-snipe visual-fill-column pixie-mode inf-clojure clojure-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme reveal-in-osx-finder railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pbcopy pastels-on-dark-theme osx-trash osx-dictionary orgit organic-green-theme org-projectile org-present org org-pomodoro alert log4e gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mwim mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow lush-theme live-py-mode light-soap-theme launchctl jbeans-theme jazz-theme ir-black-theme inkpot-theme hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md gandalf-theme flyspell-correct-ivy flyspell-correct flatui-theme flatland-theme firebelly-theme farmhouse-theme evil-magit magit magit-popup git-commit with-editor espresso-theme dracula-theme django-theme diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-statistics company-auctex company-anaconda company colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
  '(safe-local-variable-values (quote ((eval variable-pitch-mode nil))))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
