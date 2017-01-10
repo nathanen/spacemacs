@@ -160,7 +160,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("hack"
-                               :size 12
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.0)
@@ -440,7 +440,7 @@ you should place your code here."
   (define-fringe-bitmap 'git-gutter-fr:deleted
     [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
     nil nil 'center)
-  ;; (set-fringe-mode '(30 . 30))
+  (set-fringe-mode '(15 . 30))
   (global-vi-tilde-fringe-mode -1)
 
   ;; (setq-default
@@ -588,6 +588,19 @@ you should place your code here."
                                                )
   ))
 
+(org-bullets-mode 1)
+(setq-default org-hide-emphasis-markers t)
+
+(defun marked-preview-document ()
+  "run Marked on the current file and revert the buffer"
+  (interactive)
+  (shell-command
+   (format "open -a /Applications/Marked\\ 2.app/ %s"
+           (shell-quote-argument (buffer-file-name))))
+  )
+
+(spacemacs/set-leader-keys-for-major-mode ' markdown-mode "m" 'marked-preview-document)
+(spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
 
 
 ;; LATEX settings
