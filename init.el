@@ -592,7 +592,7 @@ you should place your code here."
 (setq-default org-hide-emphasis-markers t)
 
 
-;; Markdown preview and shortcuts
+;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
   "run Marked on the current file and revert the buffer"
   (interactive)
