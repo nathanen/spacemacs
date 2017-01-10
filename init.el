@@ -588,6 +588,7 @@ you should place your code here."
                                                )
   ))
 
+; ORG mode customizations
 (org-bullets-mode 1)
 (setq-default org-hide-emphasis-markers t)
 
