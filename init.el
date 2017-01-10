@@ -591,7 +591,7 @@ you should place your code here."
 ; ORG mode customizations
 (org-bullets-mode 1)
 (setq-default org-hide-emphasis-markers t)
-
+;; this needs to be expanded from old emacs
 
 ;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
