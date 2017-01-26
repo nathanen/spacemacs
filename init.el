@@ -474,11 +474,11 @@ you should place your code here."
   (setq text-scale-mode-step 1.1)
 
   ;; (setq visual-fill-column-fringes-outside-margins t) 
-  ;; (persistent-scratch-setup-default)    ;
-  (setq  persistent-scratch-backup-directory  "~/.emacs.d/private/local/") 
-  (setq persistent-scratch-save-file "~/.emacs.d/private/local/.persistent-scratch")
-  (persistent-scratch-restore)
-  (persistent-scratch-autosave-mode)
+  (setq persistent-scratch-backup-directory  "~/.spacemacs.d/tmp/") 
+  (setq persistent-scratch-save-file "~/.spacemacs.d/tmp/.persistent-scratch")
+  (persistent-scratch-setup-default)    ;
+  ;; (persistent-scratch-restore) ;
+  ;; (persistent-scratch-autosave-mode 1)
 
 ;; Make evil-mode up/down operate in screen lines instead of logical lines
   (define-key evil-motion-state-map "j" 'evil-next-visual-line)
