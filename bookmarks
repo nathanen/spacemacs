@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("md2out.py"
+(("soic-faculty-site"
+ (filename . "~/data/1-academic/soic-faculty-site/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "44 Jan  9 11:04 ")
+ (position . 272))
+("md2out.py"
  (filename . "~/bin/markdown2latex/md2out.py")
  (front-context-string . "\n    if os.path.")
  (rear-context-string . "rmtree(WORKPATH)")

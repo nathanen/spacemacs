@@ -32,44 +32,40 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     csv
-     html
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-     ivy
+     vimscript
+     javascript
      (auto-completion :disabled-for org git markdown text latex)
      better-defaults
-     emacs-lisp
      bibtex
-     osx
-     themes-megapack
-     ;; (git :variables git-gutter-use-fringe t)
+     csv
+     emacs-lisp
+     ess
+     (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
      git
-      markdown
-      imenu-list  
-      org
-      spacemacs-layouts
-      (latex :variables latex-enable-folding t latex-enable-auto-fill nil latex-build-command "LatexMk")
-      python
-      ess
-      visual-fill-column
-      ;; doom
-      ;; pixif
+     ;; (git :variables git-gutter-use-fringe t)
+     html
+     ivy
+     imenu-list  
+     (latex :variables latex-enable-folding t latex-enable-auto-fill nil latex-build-command "LatexMk")
+     markdown
+     nlinum
+     org
+     osx
+     pandoc
+     spacemacs-layouts
+     python
      (shell :variables
             shell-default-shell 'eshell
             shell-default-height 30
             shell-default-position 'bottom)
-      (spell-checking :variables =enable-flyspell-auto-completion= t)
-      ;; ;; syntax-checking
-      ;; (spell-checking)
-     ( version-control :variables version-control-global-margin t version-control-diff-tool 'git-gutter)
+     shell-scripts
+     (spell-checking :variables =enable-flyspell-auto-completion= t)
+     syntax-checking
+     themes-megapack
+     (typography :variables typography-enable-typographic-editing t)
+     (version-control :variables version-control-global-margin t version-control-diff-tool 'git-gutter)
 
-      ;; (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
-
-      (typography :variables typography-enable-typographic-editing t)
+     spacemacs-purpose
 
       )
 
@@ -77,8 +73,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `otspacemacs/user-config'.
-   dotspacemacs-additional-packages '(rainbow-mode beacon stripe-buffer doom-themes  evil-visual-mark-mode persistent-scratch atomic-chrome)
-   ;; A list of packages that cannot be updated.
+   dotspacemacs-additional-packages '(rainbow-mode beacon stripe-buffer doom-themes  evil-visual-mark-mode persistent-scratch atomic-chrome visual-fill-column reveal-in-osx-finder)
+   ;; a list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '()
@@ -330,7 +326,7 @@ you should place your code here."
 
   
   (add-to-list 'load-path "~/.spacemacs.d/custom")  
-  (add-to-list 'load-path "~/.spacemacs.d/doom-min")  
+  ;; (add-to-list 'load-path "~/.spacemacs.d/doom-min")  
 
   ;; Doom theme setup
   ;; (require 'f) 
@@ -366,6 +362,10 @@ you should place your code here."
   (set-face-foreground 'powerline-active1 "grey20")
   (set-face-foreground 'powerline-active2 "grey20")
   (set-face-foreground 'mode-line-buffer-id "grey20")
+  (set-face-foreground 'mode-line "gray10")
+  (set-face-foreground 'powerline-active1 "grey10")
+  (set-face-foreground 'powerline-active2 "grey10")
+  (set-face-foreground 'mode-line-buffer-id "grey10")
   (setq evil-normal-state-cursor '("orange" box))
   (setq evil-hybrid-state-cursor '("green" box))
   (setq evil-insert-state-cursor '("green" box))
@@ -508,8 +508,11 @@ you should place your code here."
   (setq evil-symbol-word-search t)
   (setq evil-want-fine-undo t)
   
-  (setq-default evil-escape-key-sequence "kk")
+  (setq-default evil-escape-key-sequence "jk")
   (setq-default evil-escape-delay 0.2)
+
+  ;; treat underscores as part of words, not as breaks
+  (modify-syntax-entry ?_ "w")
 
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
@@ -686,7 +689,44 @@ you should place your code here."
 
 ;; reset echo area after swiper search
 (setq resize-mini-windows t)
+(global-visual-fill-column-mode t)
 
+(setq dotspacemacs-auto-resume-layouts t)
+
+;; change frame title. TODO: find a better, more useful syntax
+(setq frame-title-format
+      (list
+       "%b - "                                           ; Buffer name
+       '(:eval (format-time-string "%H:%M - %a %-d %b")) ; Time and date
+       ))
+
+(when (and (spacemacs/system-is-mac) (display-graphic-p))
+  ;; Disable pixel-by-pixel scrolling, since it's extremely choppy.
+  (setq mac-mouse-wheel-smooth-scroll nil))
+
+  ;; Keyboard smooth scrolling: Prevent the awkward "snap to re-center" when
+  ;; the text cursor moves off-screen. Instead, only scroll the minimum amount
+  ;; necessary to show the new line. (A number of 101+ disables re-centering.)
+  (setq scroll-conservatively 101)
+
+  ;; Optimize mouse wheel scrolling for smooth-scrolling trackpad use.
+  ;; Trackpads send a lot more scroll events than regular mouse wheels,
+  ;; so the scroll amount and acceleration must be tuned to smooth it out.
+  (setq
+   ;; If the frame contains multiple windows, scroll the one under the cursor
+   ;; instead of the one that currently has keyboard focus.
+   mouse-wheel-follow-mouse 't
+   ;; Completely disable mouse wheel acceleration to avoid speeding away.
+   mouse-wheel-progressive-speed nil
+   ;; The most important setting of all! Make each scroll-event move 2 lines at
+   ;; a time (instead of 5 at default). Simply hold down shift to move twice as
+   ;; fast, or hold down control to move 3x as fast. Perfect for trackpads.
+   mouse-wheel-scroll-amount '(2 ((shift) . 4) ((control) . 6)))
+
+;; disable touchpad font scaling, which is too easy to do accidentally
+(global-set-key [magnify-up] 'ignore)
+(global-set-key [magnify-down] 'ignore)
+(setq exec-path-from-shell-arguments '("-l"))
 ;; ZEBRA: quickly search to get here
 
 )
@@ -702,11 +742,12 @@ you should place your code here."
  '(custom-safe-themes
    (quote
     ("bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "398f0209bfd642cf7a5e3e03bdc20db2822fd6746225a4bd99ccf9b26d3059d0" "51e228ffd6c4fff9b5168b31d5927c27734e82ec61f414970fc6bcce23bc140d" default)))
- '(fci-rule-color "#ECEFF1")
+ '(evil-want-Y-yank-to-eol nil)
+ '(fci-rule-color "#ECEFF1" t)
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
-    (tabbar relative-line-numbers nlinum-relative autothemer seq xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode pcache atomic-chrome websocket csv-mode persistent-scratch hide-comnt web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode company-web web-completion-data doom-one-theme-theme doom-one-theme stripe-buffer beacon rainbow-mode flycheck-pos-tip pos-tip flycheck doom-themes imenu-list doom-themes all-the-icons font-lock+ org-ref key-chord helm-bibtex parsebib biblio biblio-core typo evil-snipe visual-fill-column pixie-mode inf-clojure clojure-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme reveal-in-osx-finder railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pbcopy pastels-on-dark-theme osx-trash osx-dictionary orgit organic-green-theme org-projectile org-present org org-pomodoro alert log4e gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mwim mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow lush-theme live-py-mode light-soap-theme launchctl jbeans-theme jazz-theme ir-black-theme inkpot-theme hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md gandalf-theme flyspell-correct-ivy flyspell-correct flatui-theme flatland-theme firebelly-theme farmhouse-theme evil-magit magit magit-popup git-commit with-editor espresso-theme dracula-theme django-theme diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-statistics company-auctex company-anaconda company colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
+    (vimrc-mode dactyl-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode pandoc-mode ox-pandoc ht nlinum insert-shebang fish-mode company-shell tabbar relative-line-numbers nlinum-relative autothemer seq xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help ess-smart-equals ess-R-object-popup ess-R-data-view ctable ess julia-mode pcache atomic-chrome websocket csv-mode persistent-scratch hide-comnt web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode company-web web-completion-data doom-one-theme-theme doom-one-theme stripe-buffer beacon rainbow-mode flycheck-pos-tip pos-tip flycheck doom-themes imenu-list doom-themes all-the-icons font-lock+ org-ref key-chord helm-bibtex parsebib biblio biblio-core typo evil-snipe visual-fill-column pixie-mode inf-clojure clojure-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme reveal-in-osx-finder railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pbcopy pastels-on-dark-theme osx-trash osx-dictionary orgit organic-green-theme org-projectile org-present org org-pomodoro alert log4e gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mwim mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow lush-theme live-py-mode light-soap-theme launchctl jbeans-theme jazz-theme ir-black-theme inkpot-theme hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md gandalf-theme flyspell-correct-ivy flyspell-correct flatui-theme flatland-theme firebelly-theme farmhouse-theme evil-magit magit magit-popup git-commit with-editor espresso-theme dracula-theme django-theme diff-hl darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-statistics company-auctex company-anaconda company colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary auctex-latexmk auctex apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
  '(safe-local-variable-values (quote ((eval variable-pitch-mode nil))))
  '(vc-annotate-background "#181e26")
  '(vc-annotate-color-map
@@ -735,4 +776,4 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:background nil)))))
