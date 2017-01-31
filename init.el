@@ -726,7 +726,16 @@ you should place your code here."
 ;; disable touchpad font scaling, which is too easy to do accidentally
 (global-set-key [magnify-up] 'ignore)
 (global-set-key [magnify-down] 'ignore)
-(setq exec-path-from-shell-arguments '("-l"))
+;; (setq exec-path-from-shell-arguments '("-l"))
+
+(set-frame-parameter (default-frame) 'internal-border-width 0)
+
+;; (setq default-frame-alist  '((internal-border-width . 0)))
+;; (add-hook 'after-make-frame-functions (set-frame-parameter (selected-frame) 'internal-border-width 0))
+
+;; evil-normal-state is preferred, so revert when idle
+(run-with-idle-timer 20 t 'evil-normal-state)
+
 ;; ZEBRA: quickly search to get here
 
 )
