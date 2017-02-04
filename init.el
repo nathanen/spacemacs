@@ -147,9 +147,10 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '( 
+                         nle-tomorrow-day 
                          spacemacs-light
-                         spacemacs-dark
-                         twilight
+                         ;; spacemacs-dark
+                         ;; twilight
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -326,6 +327,7 @@ you should place your code here."
 
   
   (add-to-list 'load-path "~/.spacemacs.d/custom")  
+  (setq custom-theme-directory "~/.spacemacs.d/custom/") 
   ;; (add-to-list 'load-path "~/.spacemacs.d/doom-min")  
 
   ;; Doom theme setup
@@ -468,7 +470,7 @@ you should place your code here."
   (setq powerline-default-separator nil) 
   (spaceline-toggle-minor-modes-off)
 
-  (setq default-frame-alist '((height . 84) (width . 95)))
+  ;; (setq default-frame-alist '((height . 84) (width . 95)))
   (setq line-spacing 3)
   (setq-default line-spacing 3)
   (setq text-scale-mode-step 1.1)
@@ -524,7 +526,7 @@ you should place your code here."
     )
 
 (require  'nle-funcs)
-(require 'nle-tomorrow-day-theme)
+;; (require 'nle-tomorrow-day-theme)
 
 (spacemacs|disable-company org-mode)
 (spacemacs|disable-company markdown-mode)
@@ -735,7 +737,7 @@ you should place your code here."
 
 ;; evil-normal-state is preferred, so revert when idle
 (run-with-idle-timer 20 t 'evil-normal-state)
-
+(run-with-idle-timer 20 t 'mode-line-set-evil-state)
 ;; ZEBRA: quickly search to get here
 
 )
