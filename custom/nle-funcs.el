@@ -182,6 +182,12 @@ delay 2
 
  )  
 
+(defun set-fringe ()
+  (interactive)
+  (set-fringe-mode '(20 . 30))
+
+  )
+
 ;;;; fill-paragraph
 ;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
 (defun unfill-paragraph (&optional region)

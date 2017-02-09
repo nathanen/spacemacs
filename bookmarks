@@ -1,8 +1,13 @@
-;;;; Emacs Bookmark Format Version 1 ;;;;
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8 -*- 
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("nle.plist"
+(("Dirty Bits Project"
+ (filename . "~/Data/1-academic/0-working/0-envirocompute/0-dirty-bits/")
+ (front-context-string . ".0-tex\n  -rw-r--")
+ (rear-context-string . "06 Jan 21 10:43 ")
+ (position . 290))
+("nle.plist"
  (filename . "~/Library/Application Support/MailMate/Resources/KeyBindings/nle.plist")
  (front-context-string . "\n    \"@\\\\\" = ( \"")
  (rear-context-string . "nd:\"; // ⌘+enter")
