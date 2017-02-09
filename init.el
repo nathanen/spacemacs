@@ -361,7 +361,7 @@ you should place your code here."
 
 (setq line-spacing 4)
 (setq-default line-spacing 4)
-(setq text-scale-mode-step 1.1)
+;;(setq text-scale-mode-step 1.1)
 
 
 (blink-cursor-mode 1)
@@ -393,11 +393,53 @@ you should place your code here."
 ;; modeline
 (setq powerline-default-separator 'nil) 
 (spaceline-toggle-minor-modes-off)
-(set-face-attribute 'mode-line nil :box nil)
 
-(set-face-attribute 'mode-line nil :background 'unspecified :inherit 'powerline-active1)
-(set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :inherit 'powerline-active1)
-(set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :inherit 'powerline-active1)
+(setq evil-normal-state-cursor '("orange" box))
+(setq evil-hybrid-state-cursor '("green" box))
+(setq evil-insert-state-cursor '("green" box))
+
+
+  (defun mode-line-set-evil-state ()
+    (defvar evil_insert "chartreuse3")
+    (defvar evil_visual "gray")
+    (defvar evil_motion "plum")
+    (defvar evil_emacs "SkyBlue2")
+    (defvar evil_normal "DarkGoldenrod2")
+
+    (set-face-background 'mode-line
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+    
+    (set-face-background 'powerline-active1
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+
+    (set-face-background 'powerline-active2
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+
+    (set-face-background 'header-line
+                         (cond ((evil-motion-state-p) evil_motion)
+                               ((evil-visual-state-p) evil_visual)
+                               ((evil-emacs-state-p) evil_emacs)
+                               ((evil-normal-state-p) evil_normal)
+                               (t evil_insert)))
+    (set-face-attribute 'mode-line nil :background 'unspecified :box nil :inherit 'powerline-active1)
+    (set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :foreground 'unspecified :inherit 'mode-line)
+    (set-face-attribute 'powerline-active1 nil :foreground 'unspecified :inherit 'mode-line)
+    )
+
+
+  (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
 
 
@@ -461,6 +503,39 @@ you should place your code here."
 (set-fringe-mode '(20 . 30))
 (global-vi-tilde-fringe-mode -1)
 
+;;evil mode customizations
+;; Make evil-mode up/down operate in screen lines instead of logical lines
+(define-key evil-motion-state-map "j" 'evil-next-visual-line)
+(define-key evil-motion-state-map "k" 'evil-previous-visual-line)
+;; Also in visual mode
+(define-key evil-visual-state-map "j" 'evil-next-visual-line)
+(define-key evil-visual-state-map "k" 'evil-previous-visual-line)
+
+;; Setup evil-mode shortcuts for jumping
+;; (define-key evil-normal-state-map (kbd "gc") 'avy-goto-char)
+(define-key evil-normal-state-map (kbd "gl") 'avy-goto-line)
+
+;; (define-key evil-normal-state-map (kbd "gw") 'avy-goto-word-1)
+;; (define-key evil-normal-state-map (kbd "gs") 'avy-goto-char-2)
+;; (define-key evil-normal-state-map (kbd "gt") 'avy-goto-char-2)
+(define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
+ ;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+
+(setq evil-move-cursor-back nil)
+(setq evil-cross-lines t)
+(setq evil-symbol-word-search t)
+(setq evil-want-fine-undo t)
+
+(setq-default evil-escape-key-sequence "jk")
+(setq-default evil-escape-delay 0.2)
+
+;; treat underscores as part of words, not as breaks
+(modify-syntax-entry ?_ "w")
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
+
+
 
 ;; Deft mode
 (require 'deft)
@@ -477,6 +552,7 @@ you should place your code here."
   (interactive)
   (deft-open-file-other-window)
   (other-window 1))
+
 
 
 ;;ZEBRA
