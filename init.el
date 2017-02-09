@@ -64,7 +64,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(rainbow-mode beacon persistent-scratch visual-fill-column reveal-in-osx-finder railscasts-theme)
+   dotspacemacs-additional-packages '(rainbow-mode beacon persistent-scratch visual-fill-column reveal-in-osx-finder railscasts-theme deft)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -334,12 +334,18 @@ you should place your code here."
   
 (add-to-list 'load-path "~/.spacemacs.d/custom")  
 (setq custom-theme-directory "~/.spacemacs.d/custom/") 
+(setq abbrev-file-name "~/.spacemacs.d/abbrev_defs")
+(if (file-exists-p abbrev-file-name)
+    (quietly-read-abbrev-file))
+
+;; relocate bookmark file to git-controlled .spacemacs.d
+(setq bookmark-default-file "~/.spacemacs.d/bookmarks")
 (require  'nle-funcs)
 
 
   ;; frame and appearance related
-(setq  default-frame-alist '((top . 30) (left . 300) (width . 120) (height . 81)))
-(setq initial-frame-alist '((top . 30) (left . 300) (width . 120) (height . 81)))
+(setq  default-frame-alist '((top . 30) (left . 300) (width . 120) (height . 68)))
+(setq initial-frame-alist '((top . 30) (left . 300) (width . 120) (height . 68)))
   
     (blink-cursor-mode 1)
 
@@ -366,8 +372,37 @@ you should place your code here."
        '(:eval (format-time-string "%H:%M - %a %-d %b")) ; Time and date
        ))
 
+
 ;; modeline
 
+
+;;markdown mode
+ (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
+(setq markdown-footnote-location 'immediately)
+(add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode)))
+(add-hook 'markdown-mode-hook (lambda()
+                           (make-face 'markdown-reference-face)
+                           (make-face 'markdown-latex-face)
+			                              
+                           (set-face-attribute 'markdown-reference-face nil
+                                               :weight 'bold
+                                               :height 0.9
+                                               :foreground "darkgreen")
+ 
+                           (set-face-attribute 'markdown-latex-face nil
+                                               :weight 'bold
+                                               :height 0.9
+                                               :foreground "grey30")
+
+
+                           (font-lock-add-keywords 'markdown-mode
+                                                   '(("\\[@.*?\\]" . markdown-reference-face)))
+
+                           (font-lock-add-keywords 'markdown-mode
+                                                   '(("%%.*" . markdown-latex-face)))
+
+
+))
 ;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
   "run Marked on the current file and revert the buffer"
@@ -379,6 +414,24 @@ you should place your code here."
 
 ;;(spacemacs/set-leader-keys-for-major-mode ' markdown-mode "m" 'marked-preview-document)
 ;;(spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
+
+
+;; Deft mode
+(require 'deft)
+(setq deft-extensions '("org" "md" "txt"))
+
+(spacemacs/set-leader-keys-for-major-mode 'deft-mode
+        "c" 'deft-filter-clear
+        "l" 'deft-filter
+        "y" 'deft-open-file-other-window
+        )
+
+(defun deft-open-in-new-and-switch ()
+  "open deft file in new window and switch to it"
+  (interactive)
+  (deft-open-file-other-window)
+  (other-window 1))
+
 
 ;;ZEBRA
 )
@@ -397,7 +450,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ht haml-mode all-the-icons font-lock+ auctex anaconda-mode pythonic alert log4e gntp markdown-mode magit magit-popup git-commit with-editor linum-relative define-word zonokai-theme zenburn-theme zen-and-art-theme yapfify xterm-color ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights visual-fill-column vimrc-mode vi-tilde-fringe uuidgen use-package unfill underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stripe-buffer spaceline spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode shell-pop seti-theme scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme popwin planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode persistent-scratch pcre2el pbcopy pastels-on-dark-theme paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit organic-green-theme org-ref org-projectile org-present org-pomodoro org-download org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme nlinum-relative niflheim-theme neotree naquadah-theme mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode live-py-mode link-hint light-soap-theme less-css-mode launchctl json-mode js2-refactor js-doc jbeans-theme jazz-theme ivy-purpose ivy-hydra ir-black-theme insert-shebang inkpot-theme info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-make hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md gandalf-theme fuzzy flyspell-correct-ivy flycheck-pos-tip flx-ido flatui-theme flatland-theme fish-mode firebelly-theme fill-column-indicator farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu ess-smart-equals ess-R-object-popup ess-R-data-view espresso-theme eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dumb-jump dracula-theme doom-themes django-theme diff-hl deft darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme dactyl-mode cython-mode cyberpunk-theme csv-mode counsel-projectile company-web company-tern company-statistics company-shell company-auctex company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode clues-theme clean-aindent-mode cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme beacon badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk atomic-chrome apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ac-ispell))))
+    (deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -406,23 +459,4 @@ This function is called at the very end of Spacemacs initialization."
  )
 )
 
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+
