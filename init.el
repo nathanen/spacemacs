@@ -342,28 +342,45 @@ you should place your code here."
 (setq bookmark-default-file "~/.spacemacs.d/bookmarks")
 (require  'nle-funcs)
 
+(setq persistent-scratch-backup-directory  "~/.spacemacs.d/tmp/") 
+(setq persistent-scratch-save-file "~/.spacemacs.d/tmp/.persistent-scratch")
+(persistent-scratch-setup-default)    ;
 
   ;; frame and appearance related
-(setq  default-frame-alist '((top . 30) (left . 300) (width . 120) (height . 68)))
-(setq initial-frame-alist '((top . 30) (left . 300) (width . 120) (height . 68)))
-  
-    (blink-cursor-mode 1)
+
+(setq  default-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
+(setq initial-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
+
+(set-fringe-mode '(20 . 30))
+(global-vi-tilde-fringe-mode -1)
+(scroll-bar-mode -1)
+
+
+;; disable variable pitch for the time being
+(add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode ))) 
+
+(setq line-spacing 4)
+(setq-default line-spacing 4)
+(setq text-scale-mode-step 1.1)
+
+
+(blink-cursor-mode 1)
+(beacon-mode 1)
+(setq beacon-blink-when-buffer-changes t
+      beacon-blink-when-point-moves-vertically 10)
+(setq-default spacemacs-show-trailing-whitespace nil)
 
 ;; visual line and highlight line    
-  (defun visual-line-range ()
+(defun visual-line-range ()
     (save-excursion
       (cons
        (progn (beginning-of-visual-line) (point))
        (progn (end-of-visual-line) (point)))))
     (setq hl-line-range-function 'visual-line-range)
 
-      (global-visual-line-mode 1)
+(global-visual-line-mode 1)
 (global-visual-fill-column-mode t)
 
-      (beacon-mode 1)
-(setq beacon-blink-when-buffer-changes t
-      beacon-blink-when-point-moves-vertically 10)
- (setq-default spacemacs-show-trailing-whitespace nil)
 
  ;; change frame title. TODO: find a better, more useful syntax
 (setq frame-title-format
@@ -374,36 +391,43 @@ you should place your code here."
 
 
 ;; modeline
-  (setq powerline-default-separator 'arrow) 
-  (spaceline-toggle-minor-modes-off)
+(setq powerline-default-separator 'nil) 
+(spaceline-toggle-minor-modes-off)
+(set-face-attribute 'mode-line nil :box nil)
+
+(set-face-attribute 'mode-line nil :background 'unspecified :inherit 'powerline-active1)
+(set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :inherit 'powerline-active1)
+(set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :inherit 'powerline-active1)
+
+
 
 ;;markdown mode
- (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 (setq markdown-footnote-location 'immediately)
-(add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode)))
-(add-hook 'markdown-mode-hook (lambda()
-                           (make-face 'markdown-reference-face)
-                           (make-face 'markdown-latex-face)
-			                              
-                           (set-face-attribute 'markdown-reference-face nil
-                                               :weight 'bold
-                                               :height 0.9
-                                               :foreground "darkgreen")
  
-                           (set-face-attribute 'markdown-latex-face nil
-                                               :weight 'bold
-                                               :height 0.9
-                                               :foreground "grey30")
+(add-hook 'markdown-mode-hook (lambda()
+                                (make-face 'markdown-reference-face)
+                                (make-face 'markdown-latex-face)
+			                              
+                                (set-face-attribute 'markdown-reference-face nil
+                                                    :weight 'bold
+                                                    :height 0.9
+                                                    :foreground "darkgreen")
+ 
+                                (set-face-attribute 'markdown-latex-face nil
+                                                    :weight 'bold
+                                                    :height 0.9
+                                                    :foreground "grey30")
 
 
-                           (font-lock-add-keywords 'markdown-mode
-                                                   '(("\\[@.*?\\]" . markdown-reference-face)))
+                                (font-lock-add-keywords 'markdown-mode
+                                                        '(("\\[@.*?\\]" . markdown-reference-face)))
 
-                           (font-lock-add-keywords 'markdown-mode
-                                                   '(("%%.*" . markdown-latex-face)))
+                                (font-lock-add-keywords 'markdown-mode
+                                                        '(("%%.*" . markdown-latex-face)))
 
 
-))
+                                ))
 ;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
   "run Marked on the current file and revert the buffer"
@@ -415,6 +439,27 @@ you should place your code here."
 
 ;;(spacemacs/set-leader-keys-for-major-mode ' markdown-mode "m" 'marked-preview-document)
 ;;(spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
+
+;; git customizations
+(global-auto-revert-mode 1)
+(setq auto-revert-check-vc-info t)
+(setq auto-revert-interval 2)
+
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+
+;; Refine git gutter fringe markers 
+(define-fringe-bitmap 'git-gutter-fr:added
+  [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+  nil nil 'center)
+(define-fringe-bitmap 'git-gutter-fr:modified
+  [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+  nil nil 'center)
+(define-fringe-bitmap 'git-gutter-fr:deleted
+  [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
+  nil nil 'center)
+(set-fringe-mode '(20 . 30))
+(global-vi-tilde-fringe-mode -1)
 
 
 ;; Deft mode
