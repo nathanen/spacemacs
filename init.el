@@ -65,7 +65,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(rainbow-mode beacon persistent-scratch visual-fill-column reveal-in-osx-finder railscasts-theme deft)
+   dotspacemacs-additional-packages '(rainbow-mode beacon persistent-scratch visual-fill-column reveal-in-osx-finder railscasts-theme deft stripe-buffer evil-visual-mark-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -353,7 +353,7 @@ you should place your code here."
 (setq initial-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
 
 (set-fringe-mode '(20 . 30))
-(global-vi-tilde-fringe-mode -1)
+(spacemacs/toggle-vi-tilde-fringe-off)
 (scroll-bar-mode -1)
 
 
@@ -435,6 +435,8 @@ you should place your code here."
                                ((evil-normal-state-p) evil_normal)
                                (t evil_insert)))
     (set-face-attribute 'mode-line nil :background 'unspecified :box nil :inherit 'powerline-active1)
+    (set-face-attribute 'mode-line-inactive nil :background 'unspecified :box nil :inherit 'powerline-inactive1)
+    (set-face-attribute 'mode-line-buffer-id-inactive nil :background 'unspecified :foreground 'unspecified :inherit 'mode-line-inactive)
     (set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :foreground 'unspecified :inherit 'mode-line)
     (set-face-attribute 'powerline-active1 nil :foreground 'unspecified :inherit 'mode-line)
     )
@@ -501,8 +503,6 @@ you should place your code here."
 (define-fringe-bitmap 'git-gutter-fr:deleted
   [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
   nil nil 'center)
-(set-fringe-mode '(20 . 30))
-(global-vi-tilde-fringe-mode -1)
 
 ;;evil mode customizations
 ;; Make evil-mode up/down operate in screen lines instead of logical lines
@@ -520,7 +520,7 @@ you should place your code here."
 ;; (define-key evil-normal-state-map (kbd "gw") 'avy-goto-word-1)
 ;; (define-key evil-normal-state-map (kbd "gs") 'avy-goto-char-2)
 ;; (define-key evil-normal-state-map (kbd "gt") 'avy-goto-char-2)
-;; (define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
+(define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
  ;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (set-face-attribute 'avy-lead-face nil :foreground "red")
 (set-face-attribute 'avy-lead-face-0 nil :foreground "blue")
@@ -569,6 +569,9 @@ you should place your code here."
   (interactive)
   (deft-open-file-other-window)
   (other-window 1))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
 
 
 
