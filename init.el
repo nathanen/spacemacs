@@ -36,9 +36,11 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     bibtex
      ivy
      ;; auto-completion
      ;; better-defaults
+     deft
      emacs-lisp
      evil-snipe
      git
@@ -56,6 +58,7 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
+     typo
      shell-scripts
      ;; spell-checking
      ;; syntax-checking
@@ -356,6 +359,10 @@ you should place your code here."
 (spacemacs/toggle-vi-tilde-fringe-off)
 (scroll-bar-mode -1)
 
+(setq-default header-line-format 
+              '(" "))
+(set-face-attribute 'header-line nil :background "black" :height 0.3)
+
 
 ;; disable variable pitch for the time being
 (add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode ))) 
@@ -388,8 +395,7 @@ you should place your code here."
       (list
        "%b - "                                           ; Buffer name
        '(:eval (format-time-string "%H:%M - %a %-d %b")) ; Time and date
-       ))
-
+    ))
 
 ;; modeline
 (setq powerline-default-separator 'nil) 
@@ -399,6 +405,9 @@ you should place your code here."
 (setq evil-hybrid-state-cursor '("green" box))
 (setq evil-insert-state-cursor '("green" box))
 
+(defvar default-color nil)
+(lexical-let ((default-color (cons (face-background 'default) ; ;
+                                   (face-foreground 'default)))))
 
   (defun mode-line-set-evil-state ()
     (defvar evil_insert "chartreuse3")
@@ -406,6 +415,7 @@ you should place your code here."
     (defvar evil_motion "plum")
     (defvar evil_emacs "SkyBlue2")
     (defvar evil_normal "DarkGoldenrod2")
+    (defvar narrowed_buffer "yellow")
 
     (set-face-background 'mode-line
                          (cond ((evil-motion-state-p) evil_motion)
@@ -428,19 +438,26 @@ you should place your code here."
                                ((evil-normal-state-p) evil_normal)
                                (t evil_insert)))
 
+    ;; (set-face-background 'header-line
+    ;;                      (cond ((evil-motion-state-p) evil_motion)
+    ;;                            ((evil-visual-state-p) evil_visual)
+    ;;                            ((evil-emacs-state-p) evil_emacs)
+    ;;                            ((evil-normal-state-p) evil_normal)
+    ;;                            (t evil_insert)))
+    
     (set-face-background 'header-line
-                         (cond ((evil-motion-state-p) evil_motion)
-                               ((evil-visual-state-p) evil_visual)
-                               ((evil-emacs-state-p) evil_emacs)
-                               ((evil-normal-state-p) evil_normal)
-                               (t evil_insert)))
-    (set-face-attribute 'mode-line nil :background 'unspecified :box nil :inherit 'powerline-active1)
+                      ;; (cond ((minibufferp) default-color)
+                         (cond ((buffer-narrowed-p) narrowed_buffer)
+                               (t default-color)))
+                         
+      (set-face-attribute 'mode-line nil :background 'unspecified :box nil :inherit 'powerline-active1)
     (set-face-attribute 'mode-line-inactive nil :background 'unspecified :box nil :inherit 'powerline-inactive1)
     (set-face-attribute 'mode-line-buffer-id-inactive nil :background 'unspecified :foreground 'unspecified :inherit 'mode-line-inactive)
     (set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :foreground 'unspecified :inherit 'mode-line)
     (set-face-attribute 'powerline-active1 nil :foreground 'unspecified :inherit 'mode-line)
+    ;; end mode-line-set-evil-state
     )
-
+ 
 
   (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
@@ -451,28 +468,26 @@ you should place your code here."
 (setq markdown-footnote-location 'immediately)
  
 (add-hook 'markdown-mode-hook (lambda()
-                                (make-face 'markdown-reference-face)
-                                (make-face 'markdown-latex-face)
-			                              
-                                (set-face-attribute 'markdown-reference-face nil
-                                                    :weight 'bold
-                                                    :height 0.9
-                                                    :foreground "darkgreen")
+    (make-face 'markdown-reference-face)
+    (make-face 'markdown-latex-face)
+                                
+    (set-face-attribute 'markdown-reference-face nil
+                     :weight 'bold
+                     :height 0.9
+                     :foreground "darkgreen")
  
-                                (set-face-attribute 'markdown-latex-face nil
-                                                    :weight 'bold
-                                                    :height 0.9
-                                                    :foreground "grey30")
+    (set-face-attribute 'markdown-latex-face nil
+                    :weight 'bold
+                    :height 0.9
+                    :foreground "grey30")
 
+    (font-lock-add-keywords 'markdown-mode
+                        '(("\\[@.*?\\]" . markdown-reference-face)))
 
-                                (font-lock-add-keywords 'markdown-mode
-                                                        '(("\\[@.*?\\]" . markdown-reference-face)))
+    (font-lock-add-keywords 'markdown-mode
+                        '(("%%.*" . markdown-latex-face)))
+    ))
 
-                                (font-lock-add-keywords 'markdown-mode
-                                                        '(("%%.*" . markdown-latex-face)))
-
-
-                                ))
 ;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
   "run Marked on the current file and revert the buffer"
@@ -482,8 +497,48 @@ you should place your code here."
            (shell-quote-argument (buffer-file-name))))
   )
 
-;;(spacemacs/set-leader-keys-for-major-mode ' markdown-mode "m" 'marked-preview-document)
-;;(spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
+(spacemacs/set-leader-keys-for-major-mode ' markdown-mode "m" 'marked-preview-document)
+(spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
+
+(add-hook 'org-mode-hook #'typo-mode)
+(add-hook 'markdown-mode-hook #'typo-mode)
+(add-hook 'text-mode-hook #'typo-mode)
+
+;; org mode
+
+(add-hook 'org-mode-hook (lambda()
+                           (make-face 'org-reference-face)
+
+                           (set-face-attribute 'org-reference-face nil
+                                               :weight 'bold
+                                               :height 1.0
+                                               :foreground "darkgreen")
+                           ;; org mode customizations
+
+                           (setq org-hide-leading-stars t)
+                           
+                           ;; (setq org-ellipsis "…"                  ;
+                           ;; org-columns-ellipses "…")
+                           ;; (setq org-ellipsis "⤵")
+                           (setq org-ellipsis "⇢")
+                           (setq org-ctrl-k-protect-subtree t)
+                           (setq org-catch-invisible-edits 'show)
+                           
+                           (setq org-bullets-bullet-list
+                                 '("●" "⚬" "⚯" "•" "►" "◇"))
+                           (setq org-bullets-face-name 'outline-7)
+                           ;; (set-face-attribute 'org-level-1 nil :height 1.1)
+                           ;; (set-face-attribute 'org-level-2 nil :height 1.0)
+                           ;; (set-face-attribute 'outline-7 nil :height 1.0)
+                                               
+  ))
+
+; ORG mode customizations
+(org-bullets-mode 1)
+(setq-default org-hide-emphasis-markers t)
+;; this needs to be expanded from old emacs
+(set-face-attribute 'org-tag nil :foreground "grey60")
+
 
 ;; git customizations
 (global-auto-revert-mode 1)
@@ -523,7 +578,7 @@ you should place your code here."
 (define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
  ;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (set-face-attribute 'avy-lead-face nil :foreground "red")
-(set-face-attribute 'avy-lead-face-0 nil :foreground "blue")
+(set-face-attribute 'avy-lead-face-0 nil :foreground "lightblue")
 
 (setq evil-move-cursor-back nil)
 (setq evil-cross-lines t)
@@ -544,6 +599,9 @@ you should place your code here."
 
 ;; treat underscores as part of words, not as breaks
 (modify-syntax-entry ?_ "w")
+
+(evil-leader/set-key
+  "q q" 'spacemacs/frame-killer)
 
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
@@ -570,8 +628,14 @@ you should place your code here."
   (deft-open-file-other-window)
   (other-window 1))
 
+(define-key deft-mode-map (kbd "C-c C-o") 'deft-open-file-other-window)
+(define-key deft-mode-map (kbd "C-c C-e") 'deft-open-in-new-and-switch)
+(setq deft-use-filter-string-for-filename t)
+
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
+
+
 
 
 
@@ -590,9 +654,13 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
+ '(org-agenda-files
+   (quote
+    ("~/scratch/bibliography/test-ref-3.org" "~/scratch/org-test.org")))
  '(package-selected-packages
    (quote
-    (evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
+    (4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
