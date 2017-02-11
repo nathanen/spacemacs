@@ -38,7 +38,7 @@ values."
      ;; ----------------------------------------------------------------
      bibtex
      ivy
-     ;; auto-completion
+     (auto-completion :disabled-for org git markdown text latex)
      ;; better-defaults
      deft
      emacs-lisp
@@ -50,19 +50,23 @@ values."
      imenu-list  
      (latex :variables latex-enable-folding t latex-enable-auto-fill nil latex-build-command "LatexMk")
      markdown
+     nlinum
      org
      osx
      pandoc
      spacemacs-layouts
+     purpose
      python
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     typo
+     typography
      shell-scripts
+     (spell-checking :variables =enable-flyspell-auto-completion= t)
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
+     (version-control :variables version-control-global-margin t version-control-diff-tool 'git-gutter)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -335,7 +339,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  
+
+
+;; PATH-CUST
 (add-to-list 'load-path "~/.spacemacs.d/custom")  
 (setq custom-theme-directory "~/.spacemacs.d/custom/") 
 (setq abbrev-file-name "~/.spacemacs.d/abbrev_defs")
@@ -350,7 +356,7 @@ you should place your code here."
 (setq persistent-scratch-save-file "~/.spacemacs.d/tmp/.persistent-scratch")
 (persistent-scratch-setup-default)    ;
 
-  ;; frame and appearance related
+;; FRAME-CUST
 
 (setq  default-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
 (setq initial-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
@@ -364,9 +370,11 @@ you should place your code here."
 (set-face-attribute 'header-line nil :background "black" :height 0.3)
 
 
+(set-face-attribute 'font-lock-comment-face nil :background 'unspecified :inherit 'default)
+
 ;; disable variable pitch for the time being
 (add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode ))) 
-
+(set-face-attribute 'variable-pitch nil :family 'unspecified :inherit 'default)
 (setq line-spacing 4)
 (setq-default line-spacing 4)
 ;;(setq text-scale-mode-step 1.1)
@@ -397,7 +405,7 @@ you should place your code here."
        '(:eval (format-time-string "%H:%M - %a %-d %b")) ; Time and date
     ))
 
-;; modeline
+;; MODELINE-CUST
 (setq powerline-default-separator 'nil) 
 (spaceline-toggle-minor-modes-off)
 
@@ -463,7 +471,7 @@ you should place your code here."
 
 
 
-;;markdown mode
+;;MARKDOWN-CUST
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 (setq markdown-footnote-location 'immediately)
  
@@ -498,15 +506,18 @@ you should place your code here."
   )
 
 (spacemacs/set-leader-keys-for-major-mode ' markdown-mode "m" 'marked-preview-document)
+(spacemacs/set-leader-keys-for-major-mode ' markdown-mode "n" 'narrow-or-widen-dwim)
 (spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
 
 (add-hook 'org-mode-hook #'typo-mode)
 (add-hook 'markdown-mode-hook #'typo-mode)
 (add-hook 'text-mode-hook #'typo-mode)
 
-;; org mode
+;; ORG-CUST 
 
-(add-hook 'org-mode-hook (lambda()
+(with-eval-after-load 'org
+
+  ;; (add-hook 'org-mode-hook (lambda()
                            (make-face 'org-reference-face)
 
                            (set-face-attribute 'org-reference-face nil
@@ -530,17 +541,52 @@ you should place your code here."
                            ;; (set-face-attribute 'org-level-1 nil :height 1.1)
                            ;; (set-face-attribute 'org-level-2 nil :height 1.0)
                            ;; (set-face-attribute 'outline-7 nil :height 1.0)
-                                               
-  ))
+                           (setq org-startup-indented t)                           
+                           ;; (variable-pitch-mode )
+                           (setq-local linum-mode nil)
+                                        ; ORG mode customizations
+                           (org-bullets-mode 1)
+                           (setq-default org-hide-emphasis-markers t)
+                           ;; this needs to be expanded from old emacs
+                           (set-face-attribute 'org-tag nil :foreground "grey60" :height 0.8)
 
-; ORG mode customizations
-(org-bullets-mode 1)
-(setq-default org-hide-emphasis-markers t)
-;; this needs to be expanded from old emacs
-(set-face-attribute 'org-tag nil :foreground "grey60")
 
 
-;; git customizations
+                           (set-face-attribute 'org-level-1 nil :height 1.1)
+                           (set-face-attribute 'org-level-2 nil :height 1.0)
+                           (set-face-attribute 'org-document-title nil :height 1.2)
+  ;; ))
+
+)
+;; NARROW-CUST
+(defun narrow-or-widen-dwim (p)
+  "If the buffer is narrowed, it widens. Otherwise, it narrows intelligently.
+  Intelligently means: region, org-src-block, org-subtree, or defun,
+  whichever applies first.
+  Narrowing to org-src-block actually calls `org-edit-src-code'.
+
+  With prefix P, don't widen, just narrow even if buffer is already
+  narrowed."
+  (interactive "P")
+  (declare (interactive-only))
+  (cond ((and (buffer-narrowed-p) (not p)) (widen))
+        ((region-active-p)
+         (narrow-to-region (region-beginning) (region-end)))
+        ((derived-mode-p 'org-mode)
+         ;; `org-edit-src-code' is not a real narrowing command.
+         ;; Remove this first conditional if you don't want it.
+         (cond ((ignore-errors (org-edit-src-code))
+                (delete-other-windows))
+               ((org-at-block-p)
+                (org-narrow-to-block))
+               (t (org-narrow-to-subtree))))
+        (t (narrow-to-defun)))
+  (org-cycle)
+  )
+
+(spacemacs/set-leader-keys-for-major-mode ' org-mode "n" 'narrow-or-widen-dwim)
+
+;; GIT-CUST
 (global-auto-revert-mode 1)
 (setq auto-revert-check-vc-info t)
 (setq auto-revert-interval 2)
@@ -559,7 +605,17 @@ you should place your code here."
   [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
   nil nil 'center)
 
-;;evil mode customizations
+;; PURPOSE-CUST
+(require 'purpose)
+(add-to-list 'purpose-user-mode-purposes '(python-mode . py))
+(add-to-list 'purpose-user-mode-purposes '(org-mode . org))
+(add-to-list 'purpose-user-mode-purposes '(text-mode . org))
+(add-to-list 'purpose-user-mode-purposes '(markdown-mode . org))
+(purpose-compile-user-configuration)
+
+
+;;EVIL-CUST
+
 ;; Make evil-mode up/down operate in screen lines instead of logical lines
 (define-key evil-motion-state-map "j" 'evil-next-visual-line)
 (define-key evil-motion-state-map "k" 'evil-previous-visual-line)
@@ -612,7 +668,7 @@ you should place your code here."
 (evil-define-key 'normal evil-snipe-mode-map "z" 'evil-snipe-s)
 (evil-define-key 'normal evil-snipe-mode-map "Z" 'evil-snipe-S)
 
-;; Deft mode
+;; DEFT-CUST
 (require 'deft)
 (setq deft-extensions '("org" "md" "txt"))
 
@@ -660,7 +716,7 @@ This function is called at the very end of Spacemacs initialization."
     ("~/scratch/bibliography/test-ref-3.org" "~/scratch/org-test.org")))
  '(package-selected-packages
    (quote
-    (4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
+    (nlinum-relative nlinum fuzzy flyspell-correct-ivy flyspell-correct company-web web-completion-data company-statistics company-shell company-auctex company-anaconda company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl typo 4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
