@@ -50,7 +50,7 @@ values."
      imenu-list  
      (latex :variables latex-enable-folding t latex-enable-auto-fill nil latex-build-command "LatexMk")
      markdown
-     nlinum
+     ;; nlinum
      org
      osx
      pandoc
@@ -406,9 +406,10 @@ you should place your code here."
     ))
 
 ;; MODELINE-CUST
-(setq powerline-default-separator 'nil) 
-(spaceline-toggle-minor-modes-off)
+            (setq powerline-default-separator 'nil) 
+            (spaceline-toggle-minor-modes-off)
 
+  
 (setq evil-normal-state-cursor '("orange" box))
 (setq evil-hybrid-state-cursor '("green" box))
 (setq evil-insert-state-cursor '("green" box))
@@ -457,17 +458,32 @@ you should place your code here."
                       ;; (cond ((minibufferp) default-color)
                          (cond ((buffer-narrowed-p) narrowed_buffer)
                                (t default-color)))
-                         
-      (set-face-attribute 'mode-line nil :background 'unspecified :box nil :inherit 'powerline-active1)
+    (set-face-attribute 'mode-line nil :background 'unspecified :box nil :inherit 'powerline-active1)
     (set-face-attribute 'mode-line-inactive nil :background 'unspecified :box nil :inherit 'powerline-inactive1)
     (set-face-attribute 'mode-line-buffer-id-inactive nil :background 'unspecified :foreground 'unspecified :inherit 'mode-line-inactive)
     (set-face-attribute 'mode-line-buffer-id nil :background 'unspecified :foreground 'unspecified :inherit 'mode-line)
     (set-face-attribute 'powerline-active1 nil :foreground 'unspecified :inherit 'mode-line)
-    ;; end mode-line-set-evil-state
+
+;; end mode-line-set-evil-state
     )
  
 
   (add-hook 'post-command-hook 'mode-line-set-evil-state)
+
+;; LATEX-CUST
+
+;; this should disable ref labels
+(setq LaTeX-section-hook
+      '(LaTeX-section-heading
+        LaTeX-section-title
+        LaTeX-section-section))
+
+(add-hook 'LaTeX-mode-hook (lambda ()
+                             (TeX-fold-mode 1)))
+
+
+(setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
+
 
 
 
@@ -495,6 +511,29 @@ you should place your code here."
     (font-lock-add-keywords 'markdown-mode
                         '(("%%.*" . markdown-latex-face)))
     ))
+
+
+;; markdown reftex
+(defvar markdown-cite-format)
+(setq markdown-cite-format
+      '(
+        (?m . "[@%l]")
+        (?p . "[@%l]")
+        (?t . "@%l")
+        )
+      )
+
+;; wrap reftex-citation with local variables for markdown format
+(defun markdown-reftex-citation ()
+  (interactive)
+  (let ((reftex-cite-format markdown-cite-format)
+        (reftex-cite-key-separator "; @"))
+    (reftex-citation nil ?m )))
+
+(add-hook
+ 'markdown-mode-hook
+ (lambda ()
+   (define-key markdown-mode-map "\C-c[" 'markdown-reftex-citation)))
 
 ;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
@@ -606,13 +645,13 @@ you should place your code here."
   nil nil 'center)
 
 ;; PURPOSE-CUST
-(require 'purpose)
+(with-eval-after-load 'window-purpose
 (add-to-list 'purpose-user-mode-purposes '(python-mode . py))
 (add-to-list 'purpose-user-mode-purposes '(org-mode . org))
 (add-to-list 'purpose-user-mode-purposes '(text-mode . org))
 (add-to-list 'purpose-user-mode-purposes '(markdown-mode . org))
 (purpose-compile-user-configuration)
-
+)
 
 ;;EVIL-CUST
 
@@ -713,7 +752,7 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(org-agenda-files
    (quote
-    ("~/scratch/bibliography/test-ref-3.org" "~/scratch/org-test.org")))
+    ("~/scratch/bibliography/test-org-ref.org" "~/scratch/bibliography/test-ref-3.org" "~/scratch/org-test.org")))
  '(package-selected-packages
    (quote
     (nlinum-relative nlinum fuzzy flyspell-correct-ivy flyspell-correct company-web web-completion-data company-statistics company-shell company-auctex company-anaconda company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl typo 4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
