@@ -50,7 +50,7 @@ values."
      imenu-list  
      (latex :variables latex-enable-folding t latex-enable-auto-fill nil latex-build-command "LatexMk")
      markdown
-     ;; nlinum
+     nlinum
      org
      osx
      pandoc
@@ -490,50 +490,53 @@ you should place your code here."
 ;;MARKDOWN-CUST
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 (setq markdown-footnote-location 'immediately)
- 
-(add-hook 'markdown-mode-hook (lambda()
-    (make-face 'markdown-reference-face)
-    (make-face 'markdown-latex-face)
-                                
-    (set-face-attribute 'markdown-reference-face nil
-                     :weight 'bold
-                     :height 0.9
-                     :foreground "darkgreen")
- 
-    (set-face-attribute 'markdown-latex-face nil
-                    :weight 'bold
-                    :height 0.9
-                    :foreground "grey30")
 
-    (font-lock-add-keywords 'markdown-mode
-                        '(("\\[@.*?\\]" . markdown-reference-face)))
+(with-eval-after-load 'org
+  (make-face 'markdown-reference-face)
+  (make-face 'markdown-latex-face)
+  
+  (set-face-attribute 'markdown-reference-face nil
+                      :weight 'bold
+                      :height 0.9
+                      :foreground "slate blue")
+  
+  (set-face-attribute 'markdown-latex-face nil
+                      :weight 'bold
+                      :height 0.9
+                      :foreground "red")
 
-    (font-lock-add-keywords 'markdown-mode
-                        '(("%%.*" . markdown-latex-face)))
-    ))
+  (font-lock-add-keywords 'markdown-mode
+                          '(("\\[@.*?\\]" . markdown-reference-face)))
 
+  (font-lock-add-keywords 'markdown-mode
+                          '(("^%%.*" . markdown-latex-face)))
 
-;; markdown reftex
-(defvar markdown-cite-format)
-(setq markdown-cite-format
-      '(
-        (?m . "[@%l]")
-        (?p . "[@%l]")
-        (?t . "@%l")
+  ;; markdown reftex
+  (defvar markdown-cite-format)
+  (setq markdown-cite-format
+        '(
+          (?m . "[@%l]")
+          (?p . "[@%l]")
+          (?t . "@%l")
+          )
         )
-      )
 
-;; wrap reftex-citation with local variables for markdown format
-(defun markdown-reftex-citation ()
-  (interactive)
-  (let ((reftex-cite-format markdown-cite-format)
-        (reftex-cite-key-separator "; @"))
-    (reftex-citation nil ?m )))
+  ;; wrap reftex-citation with local variables for markdown format
+  (defun markdown-reftex-citation ()
+    (interactive)
+    (let ((reftex-cite-format markdown-cite-format)
+          (reftex-cite-key-separator "; @"))
+      (reftex-citation nil ?m )))
+)
 
-(add-hook
- 'markdown-mode-hook
- (lambda ()
-   (define-key markdown-mode-map "\C-c[" 'markdown-reftex-citation)))
+
+
+
+
+;; (add-hook
+;;  'markdown-mode-hook
+;;  (lambda ()
+;;    (define-key markdown-mode-map "\C-c[" 'markdown-reftex-citation)))
 
 ;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
@@ -730,8 +733,8 @@ you should place your code here."
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
 
-
-
+;; this was needed to stop a nasty hang doing vimlike searching
+(setq-default evil-search-module 'isearch)
 
 
 ;;ZEBRA
