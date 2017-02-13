@@ -47,10 +47,10 @@ values."
      ;; (git :variables git-gutter-use-fringe t)
      html
      ;; ivy
-     imenu-list  
+     imenu-list
      (latex :variables latex-enable-folding t latex-enable-auto-fill nil latex-build-command "LatexMk")
      markdown
-     nlinum
+     ;; nlinum
      org
      osx
      pandoc
@@ -60,7 +60,7 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     typography
+     ;; typography
      shell-scripts
      (spell-checking :variables =enable-flyspell-auto-completion= t)
      ;; spell-checking
@@ -148,7 +148,7 @@ values."
 			 spacemacs-dark
                          spacemacs-dark
                          doom-one
-                         ;;nle-tomorrow-day 
+                         ;;nle-tomorrow-day
                          spacemacs-light
                          ;; twilight
                          )
@@ -289,7 +289,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers nil
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -342,8 +342,8 @@ you should place your code here."
 
 
 ;; PATH-CUST
-(add-to-list 'load-path "~/.spacemacs.d/custom")  
-(setq custom-theme-directory "~/.spacemacs.d/custom/") 
+(add-to-list 'load-path "~/.spacemacs.d/custom")
+(setq custom-theme-directory "~/.spacemacs.d/custom/")
 (setq abbrev-file-name "~/.spacemacs.d/abbrev_defs")
 (if (file-exists-p abbrev-file-name)
     (quietly-read-abbrev-file))
@@ -352,7 +352,7 @@ you should place your code here."
 (setq bookmark-default-file "~/.spacemacs.d/bookmarks")
 (require  'nle-funcs)
 
-(setq persistent-scratch-backup-directory  "~/.spacemacs.d/tmp/") 
+(setq persistent-scratch-backup-directory  "~/.spacemacs.d/tmp/")
 (setq persistent-scratch-save-file "~/.spacemacs.d/tmp/.persistent-scratch")
 (persistent-scratch-setup-default)    ;
 
@@ -365,7 +365,7 @@ you should place your code here."
 (spacemacs/toggle-vi-tilde-fringe-off)
 (scroll-bar-mode -1)
 
-(setq-default header-line-format 
+(setq-default header-line-format
               '(" "))
 (set-face-attribute 'header-line nil :background "black" :height 0.3)
 
@@ -373,11 +373,11 @@ you should place your code here."
 (set-face-attribute 'font-lock-comment-face nil :background 'unspecified :inherit 'default)
 
 ;; disable variable pitch for the time being
-(add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode ))) 
+(add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode )))
 (set-face-attribute 'variable-pitch nil :family 'unspecified :inherit 'default)
 (setq line-spacing 4)
 (setq-default line-spacing 4)
-;;(setq text-scale-mode-step 1.1)
+(setq text-scale-mode-step 1.1)
 
 
 (blink-cursor-mode 1)
@@ -386,7 +386,7 @@ you should place your code here."
       beacon-blink-when-point-moves-vertically 10)
 (setq-default spacemacs-show-trailing-whitespace nil)
 
-;; visual line and highlight line    
+;; visual line and highlight line
 (defun visual-line-range ()
     (save-excursion
       (cons
@@ -396,6 +396,7 @@ you should place your code here."
 
 (global-visual-line-mode 1)
 (global-visual-fill-column-mode t)
+(add-hook 'text-mode-hook #'visual-fill-column-mode)
 
 
  ;; change frame title. TODO: find a better, more useful syntax
@@ -406,10 +407,10 @@ you should place your code here."
     ))
 
 ;; MODELINE-CUST
-            (setq powerline-default-separator 'nil) 
+            (setq powerline-default-separator 'nil)
             (spaceline-toggle-minor-modes-off)
 
-  
+
 (setq evil-normal-state-cursor '("orange" box))
 (setq evil-hybrid-state-cursor '("green" box))
 (setq evil-insert-state-cursor '("green" box))
@@ -432,7 +433,7 @@ you should place your code here."
                                ((evil-emacs-state-p) evil_emacs)
                                ((evil-normal-state-p) evil_normal)
                                (t evil_insert)))
-    
+
     (set-face-background 'powerline-active1
                          (cond ((evil-motion-state-p) evil_motion)
                                ((evil-visual-state-p) evil_visual)
@@ -453,7 +454,7 @@ you should place your code here."
     ;;                            ((evil-emacs-state-p) evil_emacs)
     ;;                            ((evil-normal-state-p) evil_normal)
     ;;                            (t evil_insert)))
-    
+
     (set-face-background 'header-line
                       ;; (cond ((minibufferp) default-color)
                          (cond ((buffer-narrowed-p) narrowed_buffer)
@@ -466,7 +467,7 @@ you should place your code here."
 
 ;; end mode-line-set-evil-state
     )
- 
+
 
   (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
@@ -491,25 +492,25 @@ you should place your code here."
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 (setq markdown-footnote-location 'immediately)
 
-(with-eval-after-load 'org
-  (make-face 'markdown-reference-face)
-  (make-face 'markdown-latex-face)
-  
-  (set-face-attribute 'markdown-reference-face nil
-                      :weight 'bold
-                      :height 0.9
-                      :foreground "slate blue")
-  
-  (set-face-attribute 'markdown-latex-face nil
-                      :weight 'bold
-                      :height 0.9
-                      :foreground "red")
+ (with-eval-after-load 'org
+   (make-face 'markdown-reference-face)
+   (make-face 'markdown-latex-face)
 
-  (font-lock-add-keywords 'markdown-mode
-                          '(("\\[@.*?\\]" . markdown-reference-face)))
+   (set-face-attribute 'markdown-reference-face nil
+                       :weight 'bold
+                       :height 0.9
+                       :foreground "slate blue")
 
-  (font-lock-add-keywords 'markdown-mode
-                          '(("^%%.*" . markdown-latex-face)))
+   (set-face-attribute 'markdown-latex-face nil
+                       :weight 'bold
+                       :height 0.9
+                       :foreground "red")
+
+   ;; (font-lock-add-keywords 'markdown-mode
+   ;;                         '(("\\[@.*?\\]" . markdown-reference-face)))
+
+   ;; (font-lock-add-keywords 'markdown-mode
+   ;;                         '(("^%%.*" . markdown-latex-face)))
 
   ;; markdown reftex
   (defvar markdown-cite-format)
@@ -551,11 +552,11 @@ you should place your code here."
 (spacemacs/set-leader-keys-for-major-mode ' markdown-mode "n" 'narrow-or-widen-dwim)
 (spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
 
-(add-hook 'org-mode-hook #'typo-mode)
-(add-hook 'markdown-mode-hook #'typo-mode)
-(add-hook 'text-mode-hook #'typo-mode)
+;; (add-hook 'org-mode-hook #'typo-mode)
+;; (add-hook 'markdown-mode-hook #'typo-mode)
+;; (add-hook 'text-mode-hook #'typo-mode)
 
-;; ORG-CUST 
+;; ORG-CUST
 
 (with-eval-after-load 'org
 
@@ -569,21 +570,21 @@ you should place your code here."
                            ;; org mode customizations
 
                            (setq org-hide-leading-stars t)
-                           
+
                            ;; (setq org-ellipsis "…"                  ;
                            ;; org-columns-ellipses "…")
                            ;; (setq org-ellipsis "⤵")
                            (setq org-ellipsis "⇢")
                            (setq org-ctrl-k-protect-subtree t)
                            (setq org-catch-invisible-edits 'show)
-                           
+
                            (setq org-bullets-bullet-list
                                  '("●" "⚬" "⚯" "•" "►" "◇"))
                            (setq org-bullets-face-name 'outline-7)
                            ;; (set-face-attribute 'org-level-1 nil :height 1.1)
                            ;; (set-face-attribute 'org-level-2 nil :height 1.0)
                            ;; (set-face-attribute 'outline-7 nil :height 1.0)
-                           (setq org-startup-indented t)                           
+                           ;; (setq org-startup-indented t)
                            ;; (variable-pitch-mode )
                            (setq-local linum-mode nil)
                                         ; ORG mode customizations
@@ -636,7 +637,7 @@ you should place your code here."
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
 
-;; Refine git gutter fringe markers 
+;; Refine git gutter fringe markers
 (define-fringe-bitmap 'git-gutter-fr:added
   [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
   nil nil 'center)
@@ -752,13 +753,16 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("3b0a350918ee819dca209cec62d867678d7dac74f6195f5e3799aa206358a983" default)))
  '(evil-want-Y-yank-to-eol nil)
  '(org-agenda-files
    (quote
-    ("~/scratch/org-ref-test/test-org.org" "~/scratch/bibliography/test-org-ref.org" "~/scratch/bibliography/test-ref-3.org" "~/scratch/org-test.org")))
+    ("~/scratch/bibliography/test-org-ref.org" "~/scratch/bibliography/test-ref-3.org" "~/scratch/org-test.org")))
  '(package-selected-packages
    (quote
-    (magit-popup org-plus-contrib imenu-list nlinum-relative nlinum fuzzy flyspell-correct-ivy flyspell-correct company-web web-completion-data company-statistics company-shell company-auctex company-anaconda company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl typo 4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
+    (org-ref key-chord nlinum-relative nlinum fuzzy flyspell-correct-ivy flyspell-correct company-web web-completion-data company-statistics company-shell company-auctex company-anaconda company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl typo 4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -766,5 +770,3 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  )
 )
-
-
