@@ -506,8 +506,8 @@ you should place your code here."
                        :height 0.9
                        :foreground "red")
 
-   ;; (font-lock-add-keywords 'markdown-mode
-                           ;; '(("\\[@.*?\\]" . markdown-reference-face)))
+   (font-lock-add-keywords 'markdown-mode
+                           '(("\\[@.*?\\]" . markdown-reference-face)))
 
    ;; (font-lock-add-keywords 'markdown-mode
    ;;                         '(("^%%.*" . markdown-latex-face)))
@@ -676,8 +676,8 @@ you should place your code here."
 ;; (define-key evil-normal-state-map (kbd "gt") 'avy-goto-char-2)
 (define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
  ;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
-(set-face-attribute 'avy-lead-face nil :foreground "red")
-(set-face-attribute 'avy-lead-face-0 nil :foreground "lightblue")
+(set-face-attribute 'avy-lead-face nil :foreground "goldenrod")
+(set-face-attribute 'avy-lead-face-0 nil :foreground "royal blue")
 
 (setq evil-move-cursor-back nil)
 (setq evil-cross-lines t)
