@@ -369,12 +369,12 @@ you should place your code here."
               '(" "))
 (set-face-attribute 'header-line nil :background "black" :height 0.3)
 
+(set-face-attribute 'variable-pitch nil :family "museo sans")
 
 (set-face-attribute 'font-lock-comment-face nil :background 'unspecified :inherit 'default)
 
 ;; disable variable pitch for the time being
-(add-hook 'markdown-mode-hook (lambda() (variable-pitch-mode )))
-(set-face-attribute 'variable-pitch nil :family 'unspecified :inherit 'default)
+;; (set-face-attribute 'variable-pitch nil :family 'unspecified :inherit 'default)
 (setq line-spacing 4)
 (setq-default line-spacing 4)
 (setq text-scale-mode-step 1.1)
@@ -486,20 +486,20 @@ you should place your code here."
 (setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
 
 
-
-
 ;;MARKDOWN-CUST
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 (setq markdown-footnote-location 'immediately)
+(add-hook 'markdown-mode-hook  '(variable-pitch-mode 1)) 
 
- (with-eval-after-load 'org
-   (make-face 'markdown-reference-face)
+
+(with-eval-after-load 'markdown
+  (make-face 'markdown-reference-face)
    (make-face 'markdown-latex-face)
 
    (set-face-attribute 'markdown-reference-face nil
                        :weight 'bold
                        :height 0.9
-                       :foreground "slate blue")
+                       :foreground "dark khaki")
 
    (set-face-attribute 'markdown-latex-face nil
                        :weight 'bold
