@@ -60,12 +60,10 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     ;; typography
+     typography
      shell-scripts
      (spell-checking :variables =enable-flyspell-auto-completion= t)
-     ;; spell-checking
      ;; syntax-checking
-     ;; version-control
      (version-control :variables version-control-global-margin t version-control-diff-tool 'git-gutter)
      )
    ;; List of additional packages that will be installed without being
@@ -144,13 +142,14 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(railscasts
-			 spacemacs-dark
+   dotspacemacs-themes '(nle-railscasts
+                         railscasts
+                         spacemacs-dark
                          spacemacs-dark
                          doom-one
                          ;;nle-tomorrow-day
                          spacemacs-light
-                         ;; twilight
+                          ;; twilight
                          )
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -160,7 +159,7 @@ values."
                                :size 18
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.0)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -271,7 +270,7 @@ values."
    ;; If non-nil show the color guide hint for transient state keys. (default t)
    dotspacemacs-show-transient-state-color-guide t
    ;; If non-nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-lin-unicode-symbols t
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
@@ -356,6 +355,9 @@ you should place your code here."
 (setq persistent-scratch-save-file "~/.spacemacs.d/tmp/.persistent-scratch")
 (persistent-scratch-setup-default)    ;
 
+;; stop irritating path variable warning
+;; (setq exec-path-from-shell-arguments '("-l"))
+
 ;; FRAME-CUST
 
 (setq  default-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
@@ -368,6 +370,7 @@ you should place your code here."
 (setq-default header-line-format
               '(" "))
 (set-face-attribute 'header-line nil :background "black" :height 0.3)
+(setq spacemacs-theme-comment-bg nil)
 
 (set-face-attribute 'variable-pitch nil :family "museo sans")
 
@@ -407,8 +410,11 @@ you should place your code here."
     ))
 
 ;; MODELINE-CUST
-            (setq powerline-default-separator 'nil)
-            (spaceline-toggle-minor-modes-off)
+(setq powerline-default-separator 'nil)
+(spaceline-toggle-minor-modes-off)
+
+ 
+(set-face-attribute 'mode-line nil :family "hack" :height 140)
 
 
 (setq evil-normal-state-cursor '("orange" box))
@@ -552,9 +558,9 @@ you should place your code here."
 (spacemacs/set-leader-keys-for-major-mode ' markdown-mode "n" 'narrow-or-widen-dwim)
 (spacemacs/set-leader-keys-for-major-mode ' org-mode "m" 'marked-preview-document)
 
-;; (add-hook 'org-mode-hook #'typo-mode)
-;; (add-hook 'markdown-mode-hook #'typo-mode)
-;; (add-hook 'text-mode-hook #'typo-mode)
+(add-hook 'org-mode-hook #'typo-mode)
+(add-hook 'markdown-mode-hook #'typo-mode)
+(add-hook 'text-mode-hook #'typo-mode)
 
 ;; ORG-CUST
 
