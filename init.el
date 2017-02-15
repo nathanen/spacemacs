@@ -202,7 +202,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non-nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -376,7 +376,6 @@ you should place your code here."
 (setq-default header-line-format
               '(" "))
 (set-face-attribute 'header-line nil :background "black" :height 0.3)
-(setq spacemacs-theme-comment-bg nil)
 
 
 ;; disable variable pitch for the time being
@@ -759,6 +758,29 @@ whether the window is selected."
 (setq evil-ex-interactive-search-highlight nil)
 
 
+(defun nle-resize-clear ()
+       (interactive)
+       (set-face-background 'font-lock-comment-face nil)
+       (set-face-background 'fringe nil) )
+
+
+
+;; (add-hook 'window-configuration-change-hook 
+(add-hook 'spacemacs-post-theme-change-hook
+(lambda ()
+  (set-face-background 'font-lock-comment-face nil)
+  (set-face-background 'fringe nil) 
+  (split-window-horizontally)
+))
+
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+            (set-face-background 'font-lock-comment-face nil)
+            (set-face-background 'fringe nil) 
+            (split-window-vertically)
+            ))
+
+       
 ;;ZEBRA
 )
 
@@ -774,9 +796,11 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(custom-safe-themes
    (quote
-    ("3b0a350918ee819dca209cec62d867678d7dac74f6195f5e3799aa206358a983" default)))
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "3b0a350918ee819dca209cec62d867678d7dac74f6195f5e3799aa206358a983" default)))
  '(evil-want-Y-yank-to-eol nil)
  '(org-agenda-files
    (quote
