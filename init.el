@@ -55,6 +55,7 @@ values."
      osx
      pandoc
      spacemacs-layouts
+     themes-megapack
      purpose
      python
      ;; (shell :variables
@@ -142,7 +143,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(nle-railscasts
+   dotspacemacs-themes '(material-light
                          railscasts
                          spacemacs-dark
                          spacemacs-dark
@@ -155,8 +156,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("ubuntu mono"
-                               :size 18
+   dotspacemacs-default-font '("hack"
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.0)
@@ -201,7 +202,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non-nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -358,12 +359,17 @@ you should place your code here."
 ;; stop irritating path variable warning
 ;; (setq exec-path-from-shell-arguments '("-l"))
 
+
+;; FACES-CUST
+(set-face-attribute 'variable-pitch nil :family "source sans pro" :height 170)
+(set-face-attribute 'font-lock-comment-face nil :background 'unspecified :inherit 'default)
+
+
 ;; FRAME-CUST
 
-(setq  default-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
-(setq initial-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68)))
-
-(set-fringe-mode '(20 . 30))
+(setq  default-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68) (internal-border-width . 0)))
+(setq initial-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68) (internal-border-width . 0)))
+(set-fringe-mode '(40 . 40))
 (spacemacs/toggle-vi-tilde-fringe-off)
 (scroll-bar-mode -1)
 
@@ -372,16 +378,13 @@ you should place your code here."
 (set-face-attribute 'header-line nil :background "black" :height 0.3)
 (setq spacemacs-theme-comment-bg nil)
 
-(set-face-attribute 'variable-pitch nil :family "museo sans")
-
-(set-face-attribute 'font-lock-comment-face nil :background 'unspecified :inherit 'default)
 
 ;; disable variable pitch for the time being
 ;; (set-face-attribute 'variable-pitch nil :family 'unspecified :inherit 'default)
 (setq line-spacing 4)
 (setq-default line-spacing 4)
 (setq text-scale-mode-step 1.1)
-
+(setq global-hl-line-mode 1)
 
 (blink-cursor-mode 1)
 (beacon-mode 1)
@@ -431,7 +434,7 @@ you should place your code here."
     (defvar evil_motion "plum")
     (defvar evil_emacs "SkyBlue2")
     (defvar evil_normal "DarkGoldenrod2")
-    (defvar narrowed_buffer "yellow")
+    (defvar narrowed_buffer "OliveDrab")
 
     (set-face-background 'mode-line
                          (cond ((evil-motion-state-p) evil_motion)
@@ -441,7 +444,7 @@ you should place your code here."
                                (t evil_insert)))
 
     (set-face-background 'powerline-active1
-                         (cond ((evil-motion-state-p) evil_motion)
+                          (cond ((evil-motion-state-p) evil_motion)
                                ((evil-visual-state-p) evil_visual)
                                ((evil-emacs-state-p) evil_emacs)
                                ((evil-normal-state-p) evil_normal)
@@ -477,6 +480,16 @@ you should place your code here."
 
   (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
+(defun toggle-mode-line-buffer-id-face (window)
+  "Update the `mode-line-buffer-id' face in WINDOW dependening on
+whether the window is selected."
+  (with-current-buffer (window-buffer window)
+    (if (eq (current-buffer) (window-buffer (selected-window)))
+        (face-remap-reset-base 'mode-line-buffer-id)
+      (face-remap-set-base 'mode-line-buffer-id '(:foreground "grey20")))))
+
+(add-hook 'buffer-list-update-hook (lambda () (walk-windows #'toggle-mode-line-buffer-id-face nil t)))
+
 ;; LATEX-CUST
 
 ;; this should disable ref labels
@@ -495,10 +508,10 @@ you should place your code here."
 ;;MARKDOWN-CUST
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 (setq markdown-footnote-location 'immediately)
-(add-hook 'markdown-mode-hook  '(variable-pitch-mode 1)) 
+(add-hook 'markdown-mode-hook  (variable-pitch-mode -1))
+;; (add-hook 'markdown-mode-hook  'variable-pitch-mode) 
 
 
-(with-eval-after-load 'markdown
   (make-face 'markdown-reference-face)
    (make-face 'markdown-latex-face)
 
@@ -525,8 +538,7 @@ you should place your code here."
           (?m . "[@%l]")
           (?p . "[@%l]")
           (?t . "@%l")
-          )
-        )
+          ))
 
   ;; wrap reftex-citation with local variables for markdown format
   (defun markdown-reftex-citation ()
@@ -534,16 +546,18 @@ you should place your code here."
     (let ((reftex-cite-format markdown-cite-format)
           (reftex-cite-key-separator "; @"))
       (reftex-citation nil ?m )))
-)
 
 
 
+(spacemacs/set-leader-keys-for-major-mode ' markdown-mode "ic" 'markdown-reftex-citation)
 
 
-;; (add-hook
-;;  'markdown-mode-hook
-;;  (lambda ()
-;;    (define-key markdown-mode-map "\C-c[" 'markdown-reftex-citation)))
+ 
+
+(add-hook
+ 'markdown-mode-hook
+ (lambda ()
+   (define-key markdown-mode-map "\C-c[" 'markdown-reftex-citation)))
 
 ;; Markdown/org preview and shortcuts
 (defun marked-preview-document ()
@@ -569,41 +583,41 @@ you should place your code here."
   ;; (add-hook 'org-mode-hook (lambda()
                            (make-face 'org-reference-face)
 
-                           (set-face-attribute 'org-reference-face nil
-                                               :weight 'bold
-                                               :height 1.0
-                                               :foreground "darkgreen")
-                           ;; org mode customizations
+    (set-face-attribute 'org-reference-face nil
+                        :weight 'bold
+                        :height 1.0
+                        :foreground "darkgreen")
+    ;; org mode customizations
 
-                           (setq org-hide-leading-stars t)
+    (setq org-hide-leading-stars t)
 
-                           ;; (setq org-ellipsis "…"                  ;
-                           ;; org-columns-ellipses "…")
-                           ;; (setq org-ellipsis "⤵")
-                           (setq org-ellipsis "⇢")
-                           (setq org-ctrl-k-protect-subtree t)
-                           (setq org-catch-invisible-edits 'show)
+    ;; (setq org-ellipsis "…"                  ;
+    ;; org-columns-ellipses "…")
+    ;; (setq org-ellipsis "⤵")
+    (setq org-ellipsis "⇢")
+    (setq org-ctrl-k-protect-subtree t)
+    (setq org-catch-invisible-edits 'show)
 
-                           (setq org-bullets-bullet-list
-                                 '("●" "⚬" "⚯" "•" "►" "◇"))
-                           (setq org-bullets-face-name 'outline-7)
-                           ;; (set-face-attribute 'org-level-1 nil :height 1.1)
-                           ;; (set-face-attribute 'org-level-2 nil :height 1.0)
-                           ;; (set-face-attribute 'outline-7 nil :height 1.0)
-                           ;; (setq org-startup-indented t)
-                           ;; (variable-pitch-mode )
-                           (setq-local linum-mode nil)
-                                        ; ORG mode customizations
-                           (org-bullets-mode 1)
-                           (setq-default org-hide-emphasis-markers t)
-                           ;; this needs to be expanded from old emacs
-                           (set-face-attribute 'org-tag nil :foreground "grey60" :height 0.8)
+    (setq org-bullets-bullet-list
+          '("●" "⚬" "⚯" "•" "►" "◇"))
+    (setq org-bullets-face-name 'outline-7)
+    ;; (set-face-attribute 'org-level-1 nil :height 1.1)
+    ;; (set-face-attribute 'org-level-2 nil :height 1.0)
+    ;; (set-face-attribute 'outline-7 nil :height 1.0)
+    ;; (setq org-startup-indented t)
+    ;; (variable-pitch-mode )
+    (setq-local linum-mode nil)
+                 ; ORG mode customizations
+    (org-bullets-mode 1)
+    (setq-default org-hide-emphasis-markers t)
+    ;; this needs to be expanded from old emacs
+    (set-face-attribute 'org-tag nil :foreground "grey60" :height 0.8)
 
-                           (require 'ox-md)
+    (require 'ox-md)
 
-                           (set-face-attribute 'org-level-1 nil :height 1.1)
-                           (set-face-attribute 'org-level-2 nil :height 1.0)
-                           (set-face-attribute 'org-document-title nil :height 1.2)
+    (set-face-attribute 'org-level-1 nil :height 1.1)
+    (set-face-attribute 'org-level-2 nil :height 1.0)
+    (set-face-attribute 'org-document-title nil :height 1.2)
   ;; ))
 
 )
@@ -769,7 +783,7 @@ This function is called at the very end of Spacemacs initialization."
     ("~/scratch/bibliography/test-org-ref.org" "~/scratch/bibliography/test-ref-3.org" "~/scratch/org-test.org")))
  '(package-selected-packages
    (quote
-    (org-ref key-chord nlinum-relative nlinum fuzzy flyspell-correct-ivy flyspell-correct company-web web-completion-data company-statistics company-shell company-auctex company-anaconda company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl typo 4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
+    (zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme org-ref key-chord nlinum-relative nlinum fuzzy flyspell-correct-ivy flyspell-correct company-web web-completion-data company-statistics company-shell company-auctex company-anaconda company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl typo 4clojure stripe-buffer evil-snipe magit swiper smartparens evil helm helm-core ivy deft helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify ws-butler winum which-key wgrep web-mode volatile-highlights visual-fill-column vi-tilde-fringe uuidgen use-package toc-org tagedit spaceline smex smeargle slim-mode scss-mode sass-mode reveal-in-osx-finder restart-emacs request rainbow-mode rainbow-delimiters railscasts-theme pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode persistent-scratch pcre2el pbcopy paradox pandoc-mode ox-pandoc osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint less-css-mode launchctl ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump doom-themes cython-mode counsel-projectile column-enforce-mode clean-aindent-mode beacon auto-highlight-symbol auto-compile auctex-latexmk anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -80,6 +80,11 @@ delay 2
   (nle-space 4)
   )
 
+(defun nle-5 ()
+  (interactive)
+  (nle-space 5)
+  )
+
 (defun nle-light ()
 (interactive)
 
@@ -181,11 +186,15 @@ delay 2
  (set-face-background 'fringe nil)
 
  )  
-
+ 
 (defun set-fringe ()
   (interactive)
   (set-fringe-mode '(20 . 30))
+  )
 
+(defun set-fringe-wide ()
+  (interactive)
+  (set-fringe-mode '(40 . 40))
   )
 
 ;;;; fill-paragraph
