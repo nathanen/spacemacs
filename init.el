@@ -257,7 +257,7 @@ values."
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -356,12 +356,15 @@ you should place your code here."
 (setq persistent-scratch-save-file "~/.spacemacs.d/tmp/.persistent-scratch")
 (persistent-scratch-setup-default)    ;
 
+(setq recentf-save-file "~/.spacemacs.d/recentf")
+
 ;; stop irritating path variable warning
-;; (setq exec-path-from-shell-arguments '("-l"))
+(setq exec-path-from-shell-arguments '("-l")) 
 
 
 ;; FACES-CUST
-(set-face-attribute 'variable-pitch nil :family "source sans pro" :height 170)
+(set-face-attribute 'variable-pitch nil :family "museo sans" :height 160)
+;; (set-face-attribute 'variable-pitch nil :family "source sans pro" :height  170)
 (set-face-attribute 'font-lock-comment-face nil :background 'unspecified :inherit 'default)
 
 
@@ -373,9 +376,6 @@ you should place your code here."
 (spacemacs/toggle-vi-tilde-fringe-off)
 (scroll-bar-mode -1)
 
-(setq-default header-line-format
-              '(" "))
-(set-face-attribute 'header-line nil :background "black" :height 0.3)
 
 
 ;; disable variable pitch for the time being
@@ -758,27 +758,34 @@ whether the window is selected."
 (setq evil-ex-interactive-search-highlight nil)
 
 
-(defun nle-resize-clear ()
+(defun nle-clear ()
        (interactive)
        (set-face-background 'font-lock-comment-face nil)
-       (set-face-background 'fringe nil) )
+       (set-face-background 'fringe nil)
+
+       (setq-default header-line-format
+                     '(" "))
+       (set-face-attribute 'header-line nil :background "black" :height 0.3)
+
+       )
 
 
-
-;; (add-hook 'window-configuration-change-hook 
 (add-hook 'spacemacs-post-theme-change-hook
 (lambda ()
-  (set-face-background 'font-lock-comment-face nil)
-  (set-face-background 'fringe nil) 
+  (nle-clear)
   (split-window-horizontally)
 ))
 
-(add-hook 'after-make-frame-functions
-          (lambda (frame)
-            (set-face-background 'font-lock-comment-face nil)
-            (set-face-background 'fringe nil) 
-            (split-window-vertically)
-            ))
+(spacemacs/load-theme  spacemacs--cur-theme)
+
+
+
+;; (add-hook 'after-make-frame-functions
+;;           (lambda (frame)
+;;             (set-face-background 'font-lock-comment-face nil)
+;;             (set-face-background 'fringe nil) 
+;;             (split-window-vertically)
+;;             ))
 
        
 ;;ZEBRA
