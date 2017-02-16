@@ -185,7 +185,7 @@ values."
    ;; works in the GUI. (default nil)
    dotspacemacs-distinguish-gui-tab nil
    ;; If non-nil `Y' is remapped to `y$' in Evil states. (default nil)
-   dotspacemacs-remap-Y-to-y$ nil
+   dotspacemacs-remap-Y-to-y$ t
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
    ;; there. (default t)
    dotspacemacs-retain-visual-state-on-shift t
@@ -370,7 +370,7 @@ you should place your code here."
 
 ;; FRAME-CUST
 
-(setq  default-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68) (internal-border-width . 0)))
+;; (setq  default-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68) (internal-border-width . 0)))
 (setq initial-frame-alist '((top . 25) (left . 300) (width . 120) (height . 68) (internal-border-width . 0)))
 (set-fringe-mode '(40 . 40))
 (spacemacs/toggle-vi-tilde-fringe-off)
@@ -786,6 +786,17 @@ whether the window is selected."
 ;;             (set-face-background 'fringe nil) 
 ;;             (split-window-vertically)
 ;;             ))
+ 
+
+(spacemacs|define-custom-layout "db"
+  :binding "d"
+  :body
+  (find-file "/Users/Shared/Data/1-academic/Research/0-envirocompute/0-dirty-bits/dirty-bits-paper.md")
+  (purpose-toggle-window-purpose-dedicated)
+  (split-window-right)
+  (windmove-right)
+  (find-file "/Users/Shared/Data/1-academic/Research/0-envirocompute/0-dirty-bits/enviro-compute.bib"))   
+
 
        
 ;;ZEBRA
