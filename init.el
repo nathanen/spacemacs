@@ -491,6 +491,10 @@ whether the window is selected."
 
 ;; LATEX-CUST
 
+;; hide auctex generated style files in one hidden directory
+(setq-default TeX-auto-local "~/.auctex-auto")
+
+
 ;; this should disable ref labels
 (setq LaTeX-section-hook
       '(LaTeX-section-heading
