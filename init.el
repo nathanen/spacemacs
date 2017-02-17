@@ -586,7 +586,14 @@ whether the window is selected."
                         :weight 'bold
                         :height 1.0
                         :foreground "darkgreen")
-    ;; org mode customizations
+    (set-face-attribute 'org-level-1 nil :background 'unspecified :box nil)
+    (set-face-attribute 'org-level-2 nil :background 'unspecified :box nil)
+    (set-face-attribute 'org-level-3 nil :height 'unspecified :box nil)
+
+    ;; (set-face-attribute 'org-todo nil )
+    (set-face-attribute 'org-done nil :height 0.8 :foreground "dark green")
+                                        ;
+;; org mode customizations
 
     (setq org-hide-leading-stars t)
 
@@ -757,13 +764,6 @@ whether the window is selected."
  (setq-default evil-search-module 'isearch)
 (setq evil-ex-interactive-search-highlight nil)
 
-(set-face-attribute 'org-level-1 nil :background 'unspecified :box nil)
-(set-face-attribute 'org-level-2 nil :background 'unspecified :box nil)
-(set-face-attribute 'org-level-3 nil :height 'unspecified :box nil)
-
-;; (set-face-attribute 'org-todo nil )
-(set-face-attribute 'org-done nil :height 0.8 :foreground "dark green")
-                                        ;
 (defun nle-clear ()
        (interactive)
        (set-face-background 'font-lock-comment-face nil)
