@@ -1,8 +1,13 @@
-;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8 -*- 
+;;;; Emacs Bookmark Format Version 1 ;;;;
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Dirty Bits Project"
+(("ensmenger-cv.tex"
+ (filename . "/Users/Shared/Data/1-academic/career/cv/ensmenger-cv.tex")
+ (front-context-string . "\\documentclass[1")
+ (rear-context-string)
+ (position . 1))
+("Dirty Bits Project"
  (filename . "~/Data/1-academic/0-working/0-envirocompute/0-dirty-bits/")
  (front-context-string . ".0-tex\n  -rw-r--")
  (rear-context-string . "06 Jan 21 10:43 ")
