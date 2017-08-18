@@ -769,9 +769,9 @@ whether the window is selected."
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
 
-(evil-snipe-mode 1)
-(evil-snipe-override-mode 1)
-(add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
+;; (evil-snipe-mode 1)
+;; (evil-snipe-override-mode 1)
+;; (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
 (evil-define-key 'normal evil-snipe-mode-map "S" 'evil-snipe-s)
 ;; (evil-define-key 'normal evil-snipe-mode-map "Z" 'evil-snipe-S)
 
