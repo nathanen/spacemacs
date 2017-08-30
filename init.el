@@ -364,9 +364,14 @@ you should place your code here."
 (setq recentf-save-file "~/.spacemacs.d/recentf")
 (setq recentf-max-saved-items 150)
 
+;; disable irritating warning about shell paths
+(setq exec-path-from-shell-check-startup-files nil)
+
 ;; FACES-CUST
-(set-face-attribute 'variable-pitch nil :family "museo sans" :height 160)
+;; (set-face-attribute 'variable-pitch nil :family "museo sans" :height 160)
 ;; (set-face-attribute 'variable-pitch nil :family "source sans pro" :height  170)
+(set-face-attribute 'variable-pitch nil :family "hack" :height 160)
+
 (set-face-attribute 'font-lock-comment-face nil :background 'unspecified :inherit 'default)
 
 
