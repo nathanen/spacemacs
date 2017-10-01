@@ -51,7 +51,7 @@ values."
      html
      ;; ivy
      imenu-list
-     latex
+     (latex :variables latex-build-command "LatexMk")
      markdown
      nlinum
      org
@@ -363,7 +363,7 @@ you should place your code here."
 
 (setq recentf-save-file "~/.spacemacs.d/recentf")
 (setq recentf-max-saved-items 250)
-(run-at-time nil (* 5 60) 'recentf-save-list)
+;; (run-at-time nil (* 5 60) 'recentf-save-list)
 
 ;; disable irritating warning about shell paths; not sure why the first does not work but the second does
 (setq exec-path-from-shell-check-startup-files nil)
@@ -523,18 +523,17 @@ whether the window is selected."
 
 ;;MARKDOWN-CUST
 
-
+(require 'markdown-mode)
 (setq markdown-asymmetric-header t) 
 (setq markdown-header-scaling t)
+;; (setq markdown-header-scaling-values '(1.7 1.2  1.1 1.1 1.0 1.0)) 
 
-(add-hook 'markdown-mode-hook 'imenu-add-menubar-index)
-(setq imenu-auto-rescan t)
+;; (add-hook 'markdown-mode-hook 'imenu-add-menubar-index)
+;; (setq imenu-auto-rescan t)
+;; (setq markdown-open-command "~/bin/marked")
 
-(setq markdown-open-command "~/bin/marked")
-
-(add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 (setq markdown-footnote-location 'immediately)
-(add-hook 'markdown-mode-hook  (variable-pitch-mode -1))
+;; (add-hook 'markdown-mode-hook  (variable-pitch-mode -1))
 ;; (add-hook 'markdown-mode-hook  'variable-pitch-mode) 
 
 
@@ -826,8 +825,15 @@ whether the window is selected."
  (setq-default evil-search-module 'isearch)
 (setq evil-ex-interactive-search-highlight nil)
 
+;; this needs to happen after theme gets loaded
 (defun nle-clear ()
        (interactive)
+
+
+       (set-face-attribute 'markdown-header-delimiter-face nil :foreground (color-lighten-name (face-attribute 'default :foreground) 70) :height .8)
+
+
+
        (set-face-background 'font-lock-comment-face nil)
        (set-face-background 'fringe nil)
 
@@ -918,6 +924,8 @@ abort completely with `C-g'."
 
 (set-face-attribute 'line-number-current-line nil
                     :foreground "grey10" :background "grey80")
+
+
 
 ;; (require 'color)
 ;; (set-face-attribute 'line-number nil
