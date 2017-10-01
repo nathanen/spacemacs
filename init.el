@@ -384,6 +384,19 @@ you should place your code here."
 (spacemacs/toggle-vi-tilde-fringe-off)
 (scroll-bar-mode -1)
 
+(defun disable-lines ()
+  (interactive)
+  (setq display-line-numbers nil)
+  )
+
+
+(defun enable-lines ()
+  (interactive)
+  (setq display-line-numbers nil)
+  )
+
+(add-hook 'spacemacs-buffer-mode-hook 'disable-lines)
+
 
 
 ;; disable variable pitch for the time being
@@ -522,19 +535,21 @@ whether the window is selected."
 
 ;;MARKDOWN-CUST
 
-;; this speeds things up considerably
-(use-package markdown-mode
-  :defer t
-  :mode ("\\.md\\'" . gfm-mode)
-  :init
-  ;; Prevent ~1.7 second delay by avoiding `char-displayable-p'.  See
-  ;; https://github.com/jrblevin/markdown-mode/issues/264
-  (setq markdown-url-compose-char ?∞)
-  (setq markdown-blockquote-display-char "▌")
-  (setq markdown-hr-display-char ?─)
-  (setq markdown-definition-display-char ?⁘))
+;; ;; this speeds things up considerably
+;; (use-package markdown-mode
+;;   :defer t
+;;   :mode ("\\.md\\'" . gfm-mode)
+;;   :init
+;;   ;; Prevent ~1.7 second delay by avoiding `char-displayable-p'.  See
+;;   ;; https://github.com/jrblevin/markdown-mode/issues/264
+;;   (setq markdown-url-compose-char ?∞)
+;;   (setq markdown-blockquote-display-char "▌")
+;;   (setq markdown-hr-display-char ?─)
+;;   (setq markdown-definition-display-char ?⁘))
 
-;; (require 'markdown-mode)
+(require 'markdown-mode)
+
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
 
 ;; update this function so it applies even when faces are themed
 
@@ -554,7 +569,7 @@ size of `markdown-header-face'."
 
 (setq markdown-asymmetric-header t) 
 (setq markdown-header-scaling t)
-(setq markdown-header-scaling-values '(1.4 1.1 1.0 1.1 1.0 1.0)) 
+(setq markdown-header-scaling-values '(1.3 1.2 1.0 1.1 1.0 1.0)) 
 
 
 ;; (add-hook 'markdown-mode-hook 'imenu-add-menubar-index)
@@ -948,6 +963,7 @@ abort completely with `C-g'."
               display-line-numbers-current-absolute t
       ;        display-line-numbers-width 4 
               display-line-numbers-widen t)
+
 
 (set-face-attribute 'line-number nil :height 0.8
                     :foreground "grey60")
