@@ -522,8 +522,19 @@ whether the window is selected."
 
 ;;MARKDOWN-CUST
 
+;; this speeds things up considerably
+(use-package markdown-mode
+  :defer t
+  :mode ("\\.md\\'" . gfm-mode)
+  :init
+  ;; Prevent ~1.7 second delay by avoiding `char-displayable-p'.  See
+  ;; https://github.com/jrblevin/markdown-mode/issues/264
+  (setq markdown-url-compose-char ?∞)
+  (setq markdown-blockquote-display-char "▌")
+  (setq markdown-hr-display-char ?─)
+  (setq markdown-definition-display-char ?⁘))
 
-(require 'markdown-mode)
+;; (require 'markdown-mode)
 
 ;; update this function so it applies even when faces are themed
 
