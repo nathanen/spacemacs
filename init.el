@@ -45,7 +45,7 @@ values."
      ;; better-defaults
      deft
      emacs-lisp
-     evil-snipe
+     ;; evil-snipe
      git
      ;; (git :variables git-gutter-use-fringe t)
      html
@@ -392,7 +392,7 @@ you should place your code here."
 
 (defun enable-lines ()
   (interactive)
-  (setq display-line-numbers nil)
+  (setq display-line-numbers t)
   )
 
 (add-hook 'spacemacs-buffer-mode-hook 'disable-lines)
@@ -517,6 +517,8 @@ whether the window is selected."
 (setq TeX-engine 'luatex)
 (setq TeX-PDF-mode t)
 
+;; disable auto-fill
+(setq latex-enable-auto-fill nil)
 
 ;; this should disable ref labels
 (setq LaTeX-section-hook
@@ -532,6 +534,8 @@ whether the window is selected."
 (setq org-ref-bibliography-notes "/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"
       org-ref-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib")
       org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
+
+
 
 ;;MARKDOWN-CUST
 
@@ -801,6 +805,8 @@ size of `markdown-header-face'."
 ;; (define-key evil-normal-state-map (kbd "gs") 'avy-goto-char-2)
 ;; (define-key evil-normal-state-map (kbd "gt") 'avy-goto-char-2)
 (define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
+;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
+(define-key evil-motion-state-map (kbd "s") 'avy-goto-char-2)
  ;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (set-face-attribute 'avy-lead-face nil :foreground "goldenrod")
 (set-face-attribute 'avy-lead-face-0 nil :foreground "royal blue")
@@ -1098,4 +1104,10 @@ This function is called at the very end of Spacemacs initialization."
  '(exec-path-from-shell-check-startup-files nil)
  '(package-selected-packages
    (quote
-    (esup ham-mode html-to-markdown smartparens goto-chg s dash-functional packed avy iedit evil projectile helm helm-core async hydra dash sass-mode robe pyenv-mode ox-pandoc orgit org-ref pdf-tools key-chord org-projectile org-pomodoro alert log4e nlinum-relative markdown-toc magit-gitflow ivy-hydra helm-bibtex parsebib gruvbox-theme git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flyspell-correct-ivy evil-magit magit magit-popup git-commit darktooth-theme counsel-projectile counsel swiper bundler biblio auctex-latexmk anaconda-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify yaml-mode wgrep web-mode visual-fill-column vimrc-mode underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stripe-buffer spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode seti-theme scss-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode reverse-theme reveal-in-osx-finder rbenv rake rainbow-mode railscasts-theme pyvenv pytest py-isort purple-haze-theme pug-mode professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persistent-scratch pbcopy pastels-on-dark-theme pandoc-mode ht osx-trash osx-dictionary organic-green-theme tablist org-category-capture org-present gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme nlinum niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minitest minimal-theme markdown-mode majapahit-theme madhat2r-theme lush-theme live-py-mode light-soap-theme less-css-mode launchctl jbeans-theme jazz-theme ir-black-theme insert-shebang inkpot-theme imenu-list hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme haml-mode gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter gh-md gandalf-theme flyspell-correct flatui-theme flatland-theme fish-mode firebelly-theme farmhouse-theme evil-snipe with-editor espresso-theme emmet-mode dracula-theme django-theme diff-hl deft autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme dactyl-mode cython-mode cyberpunk-theme ivy color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme chruby cherry-blossom-theme busybee-theme inf-ruby bubbleberry-theme birds-of-paradise-plus-theme biblio-core beacon badwolf-theme auto-dictionary auctex apropospriate-theme anti-zenburn-theme pythonic ample-zen-theme ample-theme alect-themes afternoon-theme material-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
+    (powerline esup ham-mode html-to-markdown smartparens goto-chg s dash-functional packed avy iedit evil projectile helm helm-core async hydra dash sass-mode robe pyenv-mode ox-pandoc orgit org-ref pdf-tools key-chord org-projectile org-pomodoro alert log4e nlinum-relative markdown-toc magit-gitflow ivy-hydra helm-bibtex parsebib gruvbox-theme git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flyspell-correct-ivy evil-magit magit magit-popup git-commit darktooth-theme counsel-projectile counsel swiper bundler biblio auctex-latexmk anaconda-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify yaml-mode wgrep web-mode visual-fill-column vimrc-mode underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stripe-buffer spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode seti-theme scss-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode reverse-theme reveal-in-osx-finder rbenv rake rainbow-mode railscasts-theme pyvenv pytest py-isort purple-haze-theme pug-mode professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persistent-scratch pbcopy pastels-on-dark-theme pandoc-mode ht osx-trash osx-dictionary organic-green-theme tablist org-category-capture org-present gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme nlinum niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minitest minimal-theme markdown-mode majapahit-theme madhat2r-theme lush-theme live-py-mode light-soap-theme less-css-mode launchctl jbeans-theme jazz-theme ir-black-theme insert-shebang inkpot-theme imenu-list hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme haml-mode gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter gh-md gandalf-theme flyspell-correct flatui-theme flatland-theme fish-mode firebelly-theme farmhouse-theme evil-snipe with-editor espresso-theme emmet-mode dracula-theme django-theme diff-hl deft autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme dactyl-mode cython-mode cyberpunk-theme ivy color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme chruby cherry-blossom-theme busybee-theme inf-ruby bubbleberry-theme birds-of-paradise-plus-theme biblio-core beacon badwolf-theme auto-dictionary auctex apropospriate-theme anti-zenburn-theme pythonic ample-zen-theme ample-theme alect-themes afternoon-theme material-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
