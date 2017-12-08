@@ -45,6 +45,7 @@ values."
      ;; better-defaults
      deft
      emacs-lisp
+     ess
      ;; evil-snipe
      git
      ;; (git :variables git-gutter-use-fringe t)
@@ -517,9 +518,6 @@ whether the window is selected."
 (setq TeX-engine 'luatex)
 (setq TeX-PDF-mode t)
 
-;; disable auto-fill
-(setq latex-enable-auto-fill nil)
-
 ;; this should disable ref labels
 (setq LaTeX-section-hook
       '(LaTeX-section-heading
@@ -527,7 +525,9 @@ whether the window is selected."
         LaTeX-section-section))
 
 (add-hook 'LaTeX-mode-hook (lambda ()
-                             (TeX-fold-mode 1)))
+                             (TeX-fold-mode 1)
+                             (setq latex-enable-auto-fill nil)
+                             ))
 
 
 (setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
@@ -799,13 +799,12 @@ size of `markdown-header-face'."
 ;; Setup evil-mode shortcuts for jumping
 (require 'avy)
 ;; (define-key evil-normal-state-map (kbd "gc") 'avy-goto-char)
-(define-key evil-normal-state-map (kbd "gl") 'avy-goto-line)
+;; (define-key evil-normal-state-map (kbd "gl") 'avy-goto-line)
 
 ;; (define-key evil-normal-state-map (kbd "gw") 'avy-goto-word-1)
 ;; (define-key evil-normal-state-map (kbd "gs") 'avy-goto-char-2)
 ;; (define-key evil-normal-state-map (kbd "gt") 'avy-goto-char-2)
 (define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
-;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (define-key evil-motion-state-map (kbd "s") 'avy-goto-char-2)
  ;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
 (set-face-attribute 'avy-lead-face nil :foreground "goldenrod")
@@ -840,7 +839,7 @@ size of `markdown-header-face'."
 ;; (evil-snipe-mode 1)
 ;; (evil-snipe-override-mode 1)
 ;; (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
-(evil-define-key 'normal evil-snipe-mode-map "S" 'evil-snipe-s)
+;; (evil-define-key 'normal evil-snipe-mode-map "S" 'evil-snipe-s)
 ;; (evil-define-key 'normal evil-snipe-mode-map "Z" 'evil-snipe-S)
 
 
