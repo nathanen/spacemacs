@@ -53,7 +53,7 @@ values."
      html
      ;; ivy
      imenu-list
-     (latex :variables latex-enable-auto-fill nil latex-build-command "LaTeXMk")
+     (latex :variables latex-enable-auto-fill nil latex-build-command "lualatex")
      markdown
      nlinum
      org
@@ -76,11 +76,11 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a Layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(rainbow-mode beacon auctex-latexmk persistent-scratch ham-mode visual-fill-column reveal-in-osx-finder railscasts-theme deft stripe-buffer evil-visual-mark-mode polymode) 
+   dotspacemacs-additional-packages '(rainbow-mode beacon persistent-scratch ham-mode visual-fill-column reveal-in-osx-finder railscasts-theme deft stripe-buffer evil-visual-mark-mode polymode) 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(auto-fill smart-parens ess-R-object-popup)
+   dotspacemacs-excluded-packages '(auto-fill smart-parens ess-R-object-popup firebelly-theme niflheim-theme pastels-on-dark-theme zonokai-theme tronesque-theme )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -398,6 +398,8 @@ you should place your code here."
   )
 
 (add-hook 'spacemacs-buffer-mode-hook 'disable-lines)
+(add-hook 'text-mode-hook 'disable-lines)
+
 
 
 
@@ -516,28 +518,25 @@ whether the window is selected."
 ;; LATEX-CUST
 
 ;; hide auctex generated style files in one hidden directory
-(setq-default TeX-auto-local "~/.auctex-auto")
-(setq TeX-engine 'luatex)
-(setq TeX-PDF-mode t)
+;; (setq-default TeX-auto-local "~/.auctex-auto")
+
+;; ;; this should disable ref labels
+;; (setq LaTeX-section-hook
+;;       '(LaTeX-section-heading
+;;         LaTeX-section-title
+;;         LaTeX-section-section))
+
+;; (setq latex-enable-auto-fill nil)
+
+;; (add-hook 'LaTeX-mode-hook (lambda ()
+;;                               (TeX-fold-mode 1)
+;;                              ))
 
 
-;; this should disable ref labels
-(setq LaTeX-section-hook
-      '(LaTeX-section-heading
-        LaTeX-section-title
-        LaTeX-section-section))
-
-(setq latex-enable-auto-fill nil)
-
-(add-hook 'LaTeX-mode-hook (lambda ()
-                              (TeX-fold-mode 1)
-                             ))
-
-
-(setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
-(setq org-ref-bibliography-notes "/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"
-      org-ref-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib")
-      org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
+;; (setq reftex-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"))
+;; (setq org-ref-bibliography-notes "/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"
+;;       org-ref-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib")
+;;       org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
 
 
 
@@ -582,7 +581,7 @@ size of `markdown-header-face'."
 
 ;; (add-hook 'markdown-mode-hook 'imenu-add-menubar-index)
 ;; (setq imenu-auto-rescan t)
-;; (setq markdown-open-command "~/bin/marked")
+(setq markdown-open-command "open -a 'Marked 2.app' %s")
 
 (setq markdown-footnote-location 'immediately)
 ;; (add-hook 'markdown-mode-hook  (variable-pitch-mode -1))
@@ -792,6 +791,18 @@ size of `markdown-header-face'."
 (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
 
 
+;; make evil respect ctrl-e (end) and ctrl-a (start) in all states
+(define-key evil-normal-state-map "\C-e" 'evil-end-of-line)
+(define-key evil-insert-state-map "\C-e" 'end-of-line)
+(define-key evil-visual-state-map "\C-e" 'evil-end-of-line)
+(define-key evil-motion-state-map "\C-e" 'evil-end-of-line)
+
+
+(define-key evil-normal-state-map "\C-a" 'evil-beginning-of-line)
+(define-key evil-insert-state-map "\C-a" 'beginning-of-line)
+(define-key evil-visual-state-map "\C-a" 'evil-beginning-of-line)
+(define-key evil-motion-state-map "\C-a" 'evil-beginnin-of-line)
+
 ;; delete without register
 ;; (evil-define-operator evil-delete-without-register (beg end type yank-handler)
 ;;   (interactive "<R><y>")
@@ -811,16 +822,19 @@ size of `markdown-header-face'."
 (define-key evil-normal-state-map (kbd "s") 'avy-goto-char-2)
 (define-key evil-motion-state-map (kbd "s") 'avy-goto-char-2)
  ;;(define-key evil-normal-state-map (kbd "f") 'avy-goto-char)
-(set-face-attribute 'avy-lead-face nil :foreground "goldenrod")
-(set-face-attribute 'avy-lead-face-0 nil :foreground "royal blue")
+(set-face-attribute 'avy-lead-face-0 nil :foreground "red" :background nil)
+(set-face-attribute 'avy-lead-face nil :foreground "blue" :background nil)
 
 (setq evil-move-cursor-back nil)
 (setq evil-cross-lines t)
 (setq evil-symbol-word-search t)
 (setq evil-want-fine-undo t)
+(setq evil-ex-substitute-global)
 
 (setq-default evil-escape-key-sequence "jj")
 (setq-default evil-escape-delay 0.2)
+
+(define-key evil-normal-state-map "zg" 'ispell-save-word)
 
 (defun set-normal ()
   (interactive)
@@ -976,11 +990,9 @@ abort completely with `C-g'."
               display-line-numbers-widen t)
 
 
-(set-face-attribute 'line-number nil :height 0.8
-                    :foreground "grey60")
+(set-face-attribute 'line-number nil :foreground "grey60")
 
-(set-face-attribute 'line-number-current-line nil
-                    :foreground "grey10" :background "grey80")
+(set-face-attribute 'line-number-current-line nil :foreground "grey10" :background "grey80")
 
 
 
@@ -990,6 +1002,15 @@ abort completely with `C-g'."
 
 ;; trying this to prevent constant lockfiles when sleeping
 (setq create-lockfiles nil) 
+
+(require 'polymode)
+(require 'poly-R)
+(require 'poly-markdown)
+
+;;; R modes
+(add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+(add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
 
  ;;;;ZEBRA
 
@@ -1019,7 +1040,6 @@ This function is called at the very end of Spacemacs initialization."
  '(custom-safe-themes
    (quote
     ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "3b0a350918ee819dca209cec62d867678d7dac74f6195f5e3799aa206358a983" default)))
- '(evil-want-Y-yank-to-eol t)
  '(fci-rule-color "#073642" t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
@@ -1110,7 +1130,6 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol t)
  '(exec-path-from-shell-check-startup-files nil)
  '(package-selected-packages
    (quote
@@ -1121,4 +1140,4 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((((class color) (min-colors 89)) (:foreground "#ffffff" :background "#263238")))))
+) 

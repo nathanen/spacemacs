@@ -148,6 +148,26 @@ delay 2
   (set-face-attribute 'default nil :family mono-font :height mono-size)
   )
 
+(defun nle-d1 ()
+  (interactive)
+  (spacemacs/load-theme 'material)
+  (set-face-attribute 'default nil :family "inconsolata" :height 180 :foreground "grey85")
+  (set-face-attribute 'variable-pitch nil :family "Nunito" :height 180 :foreground "grey70")
+
+  (nle-4)
+
+  )
+
+
+(defun nle-l1 ()
+  (interactive)
+  (spacemacs/load-theme 'material-light ) 
+  (set-face-attribute 'default nil :family "menlo" :height 140 :foreground "grey15")
+  (set-face-attribute 'variable-pitch nil :family "roboto" :height 160 :foreground "grey15") 
+  (nle-4)
+
+  )
+
 
 
 
