@@ -55,7 +55,10 @@ values."
      html
      ;; ivy
      imenu-list
-     (latex :variables latex-enable-auto-fill nil latex-build-command "lualatex")
+     (latex :variables
+            latex-enable-auto-fill nil
+            latex-build-command "LatexMk"
+            )
      markdown
      nlinum
      org
@@ -514,13 +517,30 @@ whether the window is selected."
 ;; LATEX-CUST
 
 ;; hide auctex generated style files in one hidden directory
-;; (setq-default TeX-auto-local "~/.auctex-auto")
+(setq-default TeX-auto-local "~/.auctex-auto")
 
 ;; ;; this should disable ref labels
-;; (setq LaTeX-section-hook
-;;       '(LaTeX-section-heading
-;;         LaTeX-section-title
-;;         LaTeX-section-section))
+(setq LaTeX-section-hook
+      '(LaTeX-section-heading
+        LaTeX-section-title
+        LaTeX-section-section))
+
+;; (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "lualatex")))
+
+(setq TeX-auto-save t)
+;; (setq TeX-parse-self t)
+(setq-default TeX-master t)
+(setq TeX-save-query nil)
+;; (setq-default TeX-engine 'luatex)
+;; (setq-default TeX-PDF-mode t)
+(setq TeX-show-compilation t)
+
+;; (add-hook 'LaTeX-mode-hook (lambda ()
+;;                              (push
+;;                               '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+;;                                 :help "Run latexmk on file")
+;;                               TeX-command-list)))
+
 
 ;; (setq latex-enable-auto-fill nil)
 
