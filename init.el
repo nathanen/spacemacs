@@ -849,6 +849,9 @@ size of `markdown-header-face'."
 (evil-leader/set-key
   "q q" 'spacemacs/frame-killer)
 
+;; prevent :q from quitting emacs
+(evil-ex-define-cmd "q[uit]" nil)
+
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
 
