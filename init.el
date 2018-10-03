@@ -64,7 +64,6 @@ values."
      org
      osx
      pandoc
-     spacemacs-layouts
      themes-megapack
      ;; purpose
      python
@@ -81,11 +80,11 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a Layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(rainbow-mode beacon persistent-scratch ham-mode visual-fill-column reveal-in-osx-finder railscasts-theme deft stripe-buffer evil-visual-mark-mode polymode) 
+   dotspacemacs-additional-packages '(rainbow-mode beacon persistent-scratch ham-mode visual-fill-column reveal-in-osx-finder railscasts-theme deft stripe-buffer evil-visual-mark-mode nle-tomorrow-day ) 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(auto-fill smart-parens ess-R-object-popup firebelly-theme niflheim-theme pastels-on-dark-theme zonokai-theme tronesque-theme )
+   dotspacemacs-excluded-packages '(gnutls auto-fill smart-parens ess-R-object-popup firebelly-theme niflheim-theme pastels-on-dark-theme zonokai-theme tronesque-theme )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -152,12 +151,13 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(material-light
+   dotspacemacs-themes '( 
+                         material-light
                          railscasts
                          spacemacs-dark
                          spacemacs-dark
                          doom-one
-                         ;;nle-tomorrow-day
+
                          spacemacs-light
                           ;; twilight
                          )
@@ -274,7 +274,7 @@ values."
    ;; If non nil show the color guide hint for transient state keys. (default t)
    dotspacemacs-show-transient-state-color-guide t
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
@@ -343,13 +343,14 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  (require 'gnutls)
+  (add-to-list 'gnutls-trustfiles "/usr/local/etc/openssl/cert.pem")
 
 ;; PATH-CUST
 (add-to-list 'load-path "~/.spacemacs.d/custom")
 (setq custom-theme-directory "~/.spacemacs.d/custom/")
-(setq abbrev-file-name "~/.spacemacs.d/abbrev_defs")
-(if (file-exists-p abbrev-file-name)
-    (quietly-read-abbrev-file))
+;; (setq abbrev-file-name "~/.spacemacs.d/abbrev_defs")
+;; (if (file-exists-abbrev-file))
 (setq ispell-personal-dictionary "~/.spacemacs.d/dictionary-nle.dic")
 (setq ispell-program-name "aspell")
 
@@ -368,6 +369,10 @@ you should place your code here."
 ;; disable irritating warning about shell paths; not sure why the first does not work but the second does
 (setq exec-path-from-shell-check-startup-files nil)
 (setq exec-path-from-shell-arguments '("-i"))
+
+;; follow github and other symlinks without asking
+(setq find-file-visit-truename t)
+
 
 ;; FACES-CUST
 ;; (set-face-attribute 'variable-pitch nil :family "museo sans" :height 160)
@@ -409,10 +414,10 @@ you should place your code here."
 (setq text-scale-mode-step 1.1)
 (setq global-hl-line-mode 1)
 
-(blink-cursor-mode 1)
-(beacon-mode 1)
-(setq beacon-blink-when-buffer-changes t
-      beacon-blink-when-point-moves-vertically 10)
+;; (blink-cursor-mode 1)
+;; (beacon-mode 1)
+;; (setq beacon-blink-when-buffer-changes t
+      ;; beacon-blink-when-point-moves-vertically 10)
 (setq-default spacemacs-show-trailing-whitespace nil)
 
 ;; visual line and highlight line
@@ -501,7 +506,7 @@ you should place your code here."
     )
 
 
-  (add-hook 'post-command-hook 'mode-line-set-evil-state)
+  ;; (add-hook 'post-command-hook 'mode-line-set-evil-state)
 
 (defun toggle-mode-line-buffer-id-face (window)
   "Update the `mode-line-buffer-id' face in WINDOW dependening on
@@ -531,7 +536,7 @@ whether the window is selected."
 ;; (setq TeX-parse-self t)
 (setq-default TeX-master t)
 (setq TeX-save-query nil)
-;; (setq-default TeX-engine 'luatex)
+(setq-default TeX-engine 'luatex)
 ;; (setq-default TeX-PDF-mode t)
 (setq TeX-show-compilation t)
 
@@ -553,7 +558,7 @@ whether the window is selected."
 ;; (setq org-ref-bibliography-notes "/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib"
 ;;       org-ref-default-bibliography '("/Users/nensmeng/data/1-academic/Research/0-envirocompute/0-dirty-bits-latex/enviro-compute.bib")
 ;;       org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
-
+(setq org-ref-pdf-directory "/Users/Shared/Data/zotero-enviro/")
 
 
 ;;MARKDOWN-CUST
@@ -566,7 +571,7 @@ whether the window is selected."
 ;;   ;; Prevent ~1.7 second delay by avoiding `char-displayable-p'.  See
 ;;   ;; https://github.com/jrblevin/markdown-mode/issues/264
 ;;   (setq markdown-url-compose-char ?∞)
-;;   (setq markdown-blockquote-display-char "▌")
+;;   (setq markdown-blockquote-display-char "▌") 
 ;;   (setq markdown-hr-display-char ?─)
 ;;   (setq markdown-definition-display-char ?⁘))
 
@@ -673,18 +678,6 @@ size of `markdown-header-face'."
 (with-eval-after-load 'org
 
   ;; (add-hook 'org-mode-hook (lambda()
-                           (make-face 'org-reference-face)
-
-    (set-face-attribute 'org-reference-face nil
-                        :weight 'bold
-                        :height 1.0
-                        :foreground "darkgreen")
-    (set-face-attribute 'org-level-1 nil :background 'unspecified :box nil)
-    (set-face-attribute 'org-level-2 nil :background 'unspecified :box nil)
-    (set-face-attribute 'org-level-3 nil :height 'unspecified :box nil)
-
-    ;; (set-face-attribute 'org-todo nil )
-    (set-face-attribute 'org-done nil :height 0.8 :foreground "dark green")
                                         ;
 ;; org mode customizations
 
@@ -700,9 +693,13 @@ size of `markdown-header-face'."
     (setq org-bullets-bullet-list
           '("●" "⚬" "⚯" "•" "►" "◇"))
     (setq org-bullets-face-name 'outline-7)
-    ;; (set-face-attribute 'org-level-1 nil :height 1.1)
-    ;; (set-face-attribute 'org-level-2 nil :height 1.0)
-    ;; (set-face-attribute 'outline-7 nil :height 1.0)
+    (set-face-attribute 'org-level-1 nil :height 1.1)
+    (set-face-attribute 'org-level-2 nil :height 1.0)
+    (set-face-attribute 'outline-7 nil :height 1.0)
+
+    ;; (let (orgmeta "green"))
+    ;; (set-face-attribute 'org-document-title nil :foreground "green")
+
     ;; (setq org-startup-indented t)
     ;; (variable-pitch-mode )
     (setq-local linum-mode nil)
@@ -731,6 +728,19 @@ size of `markdown-header-face'."
 
     (setq org-latex-hyperref-template "")
     (setq org-latex-with-hyperref nil)
+    
+    (make-face 'org-reference-face)
+
+    (set-face-attribute 'org-reference-face nil
+                        :weight 'bold
+                        :height 1.0
+                        :foreground "darkgreen")
+    (set-face-attribute 'org-level-1 nil :background 'unspecified :box nil)
+    (set-face-attribute 'org-level-2 nil :background 'unspecified :box nil)
+    (set-face-attribute 'org-level-3 nil :height 'unspecified :box nil)
+
+    ;; (set-face-attribute 'org-todo nil )
+    (set-face-attribute 'org-done nil :height 0.8 :foreground "dark green")
 
     (set-face-attribute 'org-level-1 nil :height 1.1)
     (set-face-attribute 'org-level-2 nil :height 1.0)
@@ -859,7 +869,7 @@ size of `markdown-header-face'."
   )
 
 ;; this auto reverts to normal mode after a set interval
-;; disabling to see if I need this anymore
+;; disabling to see if I need this anymore (re-enabled on 1/30/18)
 ;; (run-with-idle-timer 10 t 'set-normal)
 
 
@@ -921,6 +931,8 @@ size of `markdown-header-face'."
        (set-face-attribute 'markdown-header-delimiter-face nil :foreground (color-lighten-name (face-attribute 'default :foreground) 70) :height .8)
        (markdown-update-header-faces markdown-header-scaling markdown-header-scaling-values)
 
+      ;; set org faces; a custom theme would be better 
+       (set-face-attribute 'org-level-1 nil :box nil :background (face-attribute 'default :background) ) 
 
 
        (set-face-background 'font-lock-comment-face nil)
@@ -960,58 +972,57 @@ size of `markdown-header-face'."
   (windmove-right)
   (find-file "/Users/Shared/Data/1-academic/Research/0-envirocompute/0-dirty-bits/enviro-compute.bib"))   
 
-(define-key ctl-x-map "\C-i"
-  #'endless/ispell-word-then-abbrev)
+;; (define-key ct-x-map "\C-i"
+;;   #'endless/ispell-word-then-abbrev)
 
-(defun endless/simple-get-word ()
-  (car-safe (save-excursion (ispell-get-word nil))))
+;; (defun endless/simple-get-word ()
+;;   (car-safe (save-excursion (ispell-get-word nil))))
 
-(defun endless/ispell-word-then-abbrev (p)
-  "Call `ispell-word', then create an abbrev for it.
-With prefix P, create local abbrev. Otherwise it will
-be global.
-If there's nothing wrong with the word at point, keep
-looking for a typo until the beginning of buffer. You can
-skip typos you don't want to fix with `SPC', and you can
-abort completely with `C-g'."
-  (interactive "P")
-  (let (bef aft)
-    (save-excursion
-      (while (if (setq bef (endless/simple-get-word))
-                 ;; Word was corrected or used quit.
-                 (if (ispell-word nil 'quiet)
-                     nil ; End the loop.
-                   ;; Also end if we reach `bob'.
-                   (not (bobp)))
-               ;; If there's no word at point, keep looking
-               ;; until `bob'.
-               (not (bobp)))
-        (backward-word)
-        (backward-char))
-      (setq aft (endless/simple-get-word)))
-    (if (and aft bef (not (equal aft bef)))
-        (let ((aft (downcase aft))
-              (bef (downcase bef)))
-          (define-abbrev
-            (if p local-abbrev-table global-abbrev-table)
-            bef aft)
-          (message "\"%s\" now expands to \"%s\" %sally"
-                   bef aft (if p "loc" "glob")))
-      (user-error "No typo at or before point"))))
+;; (defun endless/ispell-word-then-abbrev (p)
+;;   "Call `ispell-word', then create an abbrev for it.
+;; With prefix P, create local abbrev. Otherwise it will
+;; be global.
+;; If there's nothing wrong with the word at point, keep
+;; looking for a typo until the beginning of buffer. You can
+;; skip typos you don't want to fix with `SPC', and you can
+;; abort completely with `C-g'."
+;;   (interactive "P")
+;;   (let (bef aft)
+;;     (save-excursion
+;;       (while (if (setq bef (endless/simple-get-word))
+;;                  ;; Word was corrected or used quit.
+;;                  (if (ispell-word nil 'quiet)
+;;                      nil ; End the loop.
+;;                    ;; Also end if we reach `bob'.
+;;                    (not (bobp)))
+;;                ;; If there's no word at point, keep looking
+;;                ;; until `bob'.
+;;                (not (bobp)))
+;;         (backward-word)
+;;         (backward-char))
+;;       (setq aft (endless/simple-get-word)))
+;;     (if (and aft bef (not (equal aft bef)))
+;;         (let ((aft (downcase aft))
+;;               (bef (downcase bef)))
+;;           (define-abbrev
+;;             (if p local-abbrev-table global-abbrev-table)
+;;             bef aft)
+;;           (message "\"%s\" now expands to \"%s\" %sally"
+;;                    bef aft (if p "loc" "glob")))
+;;       (user-error "No typo at or before point"))))
 
-(setq save-abbrevs 'silently)
-(setq-default abbrev-mode t)
+;; (setq save-abbrevs 'silently)
+;; (setq-default abbrev-mode t)
+;; (setq abbrev-file-name "~/.emacs.d/.cache/abbrev_defs")
+
+;; (setq-default display-line-numbers 'visual
+;;               display-line-numbers-current-absolute t
+;;       ;        display-line-numbers-width 4 
+;;               display-line-numbers-widen t)
 
 
-(setq-default display-line-numbers 'visual
-              display-line-numbers-current-absolute t
-      ;        display-line-numbers-width 4 
-              display-line-numbers-widen t)
-
-
-(set-face-attribute 'line-number nil :foreground "grey60")
-
-(set-face-attribute 'line-number-current-line nil :foreground "grey10" :background "grey80")
+;; (set-face-attribute 'line-number nil :foreground "grey60")
+;; (set-face-attribute 'line-number-current-line nil :foreground "grey10" :background "grey80")
 
 
 
@@ -1022,9 +1033,9 @@ abort completely with `C-g'."
 ;; trying this to prevent constant lockfiles when sleeping
 (setq create-lockfiles nil) 
 
-(require 'polymode)
-(require 'poly-R)
-(require 'poly-markdown)
+;; (require 'polymode)
+;; (require 'poly-R)
+;; (require 'poly-markdown)
 
 ;;; R modes
 (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
@@ -1033,6 +1044,8 @@ abort completely with `C-g'."
 
  ;;;;ZEBRA
 
+
+(load-theme 'nle-tomorrow-day)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -1149,15 +1162,20 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("b9b1bc5b3549acc33aece3ec085a8f665a079e9021e4f7ae950fdddfc54c74ce" "d03e07d962a0bd41cbb287228b2878efc8b1e955f6394a7915a1d5f190b2011e" "9412704bbd9807f31d096f2982ed416c2219b718dcf88343c0c1385b6b8778b2" "65eb691cd288cfe0d6406f8a891e5c64cf7c0f1b730f8405ba01b5be21835209" "761572049d02cc1841a508b5ad7f41811abb81b1c44c0167a5bb4f5454a5e5fe" "8fd92b018b76b3daa0fd6d06d0e4562d50ac72767643f7c0576871e6c2c154aa" "72069b64793e80360a6a62035a4cc43ec9bdd72271cd24b1310ffa800638dbb2" "042f54a6b907dd96d7dd641b213399f1661eade80080cf227096fd031224210d" "cb3a63ab71eaaba51be65d409f5b85711999cf4b30c39c775bc15000cf67ef93" "7de5fb87ab7a06dd4bbd62b6f480767b9fc935392b5da92d2059505f2d40a770" "70f50d314b43d55568b7737814c8239a985bf518088244281db66b936fd6f90d" "92319fcac68d29b3bbc061280118ddf0a0a8e3f42fbdd3e1c97b85a0e1886136" "eb1e723d477e0bde6408763ffd3ea634aec0c73bb114b2598d15b10c6b24c10d" "72d67a8380c01b15668f9692ee2786884688402b84320b688bd86facf22976e0" "5925b5069f7e70fce445d9287735c729180afe033648222436944de90346c55b" "edc02db4c54d877143a10a7de2b805b5f5501468a5de05cf01b6740706548e08" "9d5ca334ffa1f6718b84e24027d4b454fb4bd2972be5ec375414b980bc711011" "36bb09ad4b523d8a3cfb6806699d89184ce43f02ecac35e6e2505c93de7ec64c" "82a1aa318051fb4551b21e93989f89b892916de858c802ff8aa8b8cfdd2198ea" "31deed4ac5d0b65dc051a1da3611ef52411490b2b6e7c2058c13c7190f7e199b" default)))
  '(evil-want-Y-yank-to-eol t)
  '(exec-path-from-shell-check-startup-files nil)
+ '(org-agenda-files (quote ("~/scratch/org/test-large.org")))
  '(package-selected-packages
    (quote
-    (auto-compile ess f web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode csv-mode polymode evil-commentary bind-key ghub powerline esup ham-mode html-to-markdown smartparens goto-chg s dash-functional packed avy iedit evil projectile helm helm-core async hydra dash sass-mode robe pyenv-mode ox-pandoc orgit org-ref pdf-tools key-chord org-projectile org-pomodoro alert log4e nlinum-relative markdown-toc magit-gitflow ivy-hydra helm-bibtex parsebib gruvbox-theme git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flyspell-correct-ivy evil-magit magit magit-popup git-commit darktooth-theme counsel-projectile counsel swiper bundler biblio auctex-latexmk anaconda-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify yaml-mode wgrep web-mode visual-fill-column vimrc-mode underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stripe-buffer spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode seti-theme scss-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode reverse-theme reveal-in-osx-finder rbenv rake rainbow-mode railscasts-theme pyvenv pytest py-isort purple-haze-theme pug-mode professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persistent-scratch pbcopy pastels-on-dark-theme pandoc-mode ht osx-trash osx-dictionary organic-green-theme tablist org-category-capture org-present gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme nlinum niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minitest minimal-theme markdown-mode majapahit-theme madhat2r-theme lush-theme live-py-mode light-soap-theme less-css-mode launchctl jbeans-theme jazz-theme ir-black-theme insert-shebang inkpot-theme imenu-list hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme haml-mode gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter gh-md gandalf-theme flyspell-correct flatui-theme flatland-theme fish-mode firebelly-theme farmhouse-theme evil-snipe with-editor espresso-theme emmet-mode dracula-theme django-theme diff-hl deft autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme dactyl-mode cython-mode cyberpunk-theme ivy color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme chruby cherry-blossom-theme busybee-theme inf-ruby bubbleberry-theme birds-of-paradise-plus-theme biblio-core beacon badwolf-theme auto-dictionary auctex apropospriate-theme anti-zenburn-theme pythonic ample-zen-theme ample-theme alect-themes afternoon-theme material-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-aGnzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol autogg-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (\(nle-tomorrow-day\ :location\ local\)-theme nle-tomorrow-day-theme treepy graphql outshine parent-mode flx evil-anzu anzu ess-smart-equals ess-R-data-view ctable popup diminish pkg-info bind-map julia-mode xpm let-alist doom doom-themes epl white-sand-theme rebecca-theme org-mime exotica-theme highlight auto-compile ess f web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode csv-mode polymode evil-commentary bind-key ghub powerline esup ham-mode html-to-markdown smartparens goto-chg s dash-functional packed avy iedit evil projectile helm helm-core async hydra dash sass-mode robe pyenv-mode ox-pandoc orgit org-ref pdf-tools key-chord org-projectile org-pomodoro alert log4e nlinum-relative markdown-toc magit-gitflow ivy-hydra helm-bibtex parsebib gruvbox-theme git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flyspell-correct-ivy evil-magit magit magit-popup git-commit darktooth-theme counsel-projectile counsel swiper bundler biblio auctex-latexmk anaconda-mode zonokai-theme zenburn-theme zen-and-art-theme yapfify yaml-mode wgrep web-mode visual-fill-column vimrc-mode underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stripe-buffer spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode seti-theme scss-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode reverse-theme reveal-in-osx-finder rbenv rake rainbow-mode railscasts-theme pyvenv pytest py-isort purple-haze-theme pug-mode professional-theme planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persistent-scratch pbcopy pastels-on-dark-theme pandoc-mode ht osx-trash osx-dictionary organic-green-theme tablist org-category-capture org-present gntp org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme nlinum niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minitest minimal-theme markdown-mode majapahit-theme madhat2r-theme lush-theme live-py-mode light-soap-theme less-css-mode launchctl jbeans-theme jazz-theme ir-black-theme insert-shebang inkpot-theme imenu-list hy-mode htmlize heroku-theme hemisu-theme hc-zenburn-theme haml-mode gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter gh-md gandalf-theme flyspell-correct flatui-theme flatland-theme fish-mode firebelly-theme farmhouse-theme evil-snipe with-editor espresso-theme emmet-mode dracula-theme django-theme diff-hl deft autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme dactyl-mode cython-mode cyberpunk-theme ivy color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme chruby cherry-blossom-theme busybee-theme inf-ruby bubbleberry-theme birds-of-paradise-plus-theme biblio-core beacon badwolf-theme auto-dictionary auctex apropospriate-theme anti-zenburn-theme pythonic ample-zen-theme ample-theme alect-themes afternoon-theme material-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-aGnzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol autogg-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(tramp-syntax (quote default) nil (tramp)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+ )
+ 

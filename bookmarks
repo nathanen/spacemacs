@@ -2,16 +2,26 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("ensmenger-cv.tex"
+(("org-refile-last-stored"
+ (filename . "~/scratch/org/test-large.org")
+ (front-context-string . "** Fichter and H")
+ (rear-context-string . "ibertarianism.\n\n")
+ (position . 18976))
+("women-computing.org"
+ (filename . "/Users/Shared/Data/1-academic/Research/women-computing.org")
+ (front-context-string . "via Marie: https")
+ (rear-context-string . " (time-sharing)\n")
+ (position . 9313))
+("quotations.txt"
+ (filename . "/Users/Shared/Data/1-academic/Research/quotations.txt")
+ (front-context-string . "\n [Pope Francis ")
+ (rear-context-string . "consequences.”\n ")
+ (position . 106))
+("ensmenger-cv.tex"
  (filename . "/Users/Shared/Data/1-academic/career/cv/ensmenger-cv.tex")
  (front-context-string . "\\documentclass[1")
  (rear-context-string)
  (position . 1))
-("Dirty Bits Project"
- (filename . "/Users/")
- (front-context-string . ".0-tex\n  -rw-r--")
- (rear-context-string . "06 Jan 21 10:43 ")
- (position . 290))
 ("nle.plist"
  (filename . "~/Library/Application Support/MailMate/Resources/KeyBindings/nle.plist")
  (front-context-string . "\n    \"@\\\\\" = ( \"")
@@ -28,30 +38,9 @@
  (front-context-string . "\n    if os.path.")
  (rear-context-string . "rmtree(WORKPATH)")
  (position . 3929))
-("ensmenger-cv.tex<2>"
- (filename . "/Users/Shared/Data/1-academic/career/cv/ensmenger-cv.tex")
- (front-context-string . "\\documentclass[1")
- (rear-context-string)
- (position . 1))
 ("Dirty Bits Project<2>"
  (filename . "/Users/Shared/Data/1-academic/Research/0-envirocompute/0-dirty-bits")
  (front-context-string . ".0-tex\n  -rw-r--")
  (rear-context-string . "06 Jan 21 10:43 ")
  (position . 290))
-("nle.plist<2>"
- (filename . "~/Library/Application Support/MailMate/Resources/KeyBindings/nle.plist")
- (front-context-string . "\n    \"@\\\\\" = ( \"")
- (rear-context-string . "nd:\"; // ⌘+enter")
- (position . 219))
-(#("soic-faculty-site<2>" 0 17
-   (face ivy-virtual))
- (filename . "~/data/1-academic/soic-faculty-site/")
- (front-context-string . ".DS_Store\n  drwx")
- (rear-context-string . "44 Jan  9 11:04 ")
- (position . 272))
-("md2out.py<2>"
- (filename . "~/bin/markdown2latex/md2out.py")
- (front-context-string . "\n    if os.path.")
- (rear-context-string . "rmtree(WORKPATH)")
- (position . 3929))
 )
